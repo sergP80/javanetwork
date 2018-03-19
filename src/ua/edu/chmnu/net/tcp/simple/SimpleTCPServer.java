@@ -1,9 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package ua.edu.chmnu.net.tcp;
+
+package ua.edu.chmnu.net.tcp.simple;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -11,13 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- *
- * @author svpuzyrov
- */
 public class SimpleTCPServer implements Runnable {
 
     public static final String DEFAULT_HOST = "0.0.0.0";
@@ -36,7 +26,7 @@ public class SimpleTCPServer implements Runnable {
         this.host = host;
         this.port = port;
         this.backlog = backlog;
-        this.serverSocket = new ServerSocket(port, backlog, InetAddress.getByName(host));
+        this.serverSocket = new ServerSocket(port, backlog, InetAddress.getByName(host));        
     }
 
     public SimpleTCPServer(int port, int backlog) throws UnknownHostException, IOException {
@@ -54,15 +44,17 @@ public class SimpleTCPServer implements Runnable {
     @Override
     public void run() {
         System.out.printf("Server started at [%s:%d]\n", this.host, this.port);
-        try {
+        try(ServerSocket serverSocket = this.serverSocket) {
             while (isActive()) {
                 Socket socket = serverSocket.accept();
                 executor.submit(new ServerClientSession(socket));
             }
         } catch (IOException ex) {
-            if (serverSocket.isClosed())
+            if (this.serverSocket.isClosed())
             {
                 System.out.println("Server socket was closed");
+            } else {
+                System.out.println("Unknown error: " + ex.getMessage());
             }            
         }
     }

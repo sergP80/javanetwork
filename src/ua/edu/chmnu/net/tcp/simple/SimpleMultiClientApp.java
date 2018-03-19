@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ua.edu.chmnu.net.tcp;
+package ua.edu.chmnu.net.tcp.simple;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -13,7 +14,7 @@ import java.util.concurrent.Executors;
  * @author svpuzyrov
  */
 public class SimpleMultiClientApp {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         String[] testData = {
             "Hello, I'm here!",
             "Is anyone here?",

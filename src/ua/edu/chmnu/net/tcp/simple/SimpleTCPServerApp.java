@@ -1,19 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package ua.edu.chmnu.net.tcp;
+package ua.edu.chmnu.net.tcp.simple;
 
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- *
- * @author svpuzyrov
- */
 public class SimpleTCPServerApp {
     public static void main(String[] args) throws IOException {
         SimpleTCPServer server = new SimpleTCPServer();
@@ -23,8 +14,13 @@ public class SimpleTCPServerApp {
         System.out.println("To stop application press any key");
         try(Scanner in = new Scanner(System.in))
         {
-            while(!in.hasNext())
-            {}
+            do {
+                String line = in.nextLine();
+                if (line.equalsIgnoreCase("Q"))
+                {
+                    break;
+                }
+            }while(true);
         }
         
         server.setActive(false);
