@@ -1,5 +1,6 @@
 package ua.edu.chmnu.net.udp.multicast;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.time.LocalDateTime;
 import java.util.Scanner;
@@ -9,7 +10,7 @@ import static ua.edu.chmnu.net.common.CmdLineParser.extractValue;
 
 public class MultiCastSenderApp {
 
-    public static void main(String[] args) throws SocketException {
+    public static void main(String[] args) throws SocketException, IOException {
         ExecutorService service = Executors.newCachedThreadPool();
 
         String group = "224.0.0.3";
