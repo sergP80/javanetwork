@@ -5,8 +5,10 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import ua.edu.chmnu.net.common.NetworkUtils;
 
 public class MultiCastReceiver implements Runnable {
 
@@ -18,7 +20,13 @@ public class MultiCastReceiver implements Runnable {
     public MultiCastReceiver(String group, int groupPort) throws IOException {
         this.group = group;
         this.groupPort = groupPort;
+        List<InetAddress> addrList = NetworkUtils.getAvailableIPv4Adresses();
+        if (addrList.isEmpty())
+        {
+            throw new IOException("No available IP v4 interfaces");
+        }
         this.socket = new MulticastSocket(groupPort);
+        this.socket.setInterface(addrList.get(0));
     }
 
     public boolean isActive() {
