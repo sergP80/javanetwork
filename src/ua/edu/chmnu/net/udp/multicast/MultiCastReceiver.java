@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,18 +16,23 @@ public class MultiCastReceiver implements Runnable {
     private final String group;
     private final int groupPort;
     private boolean active = true;
+    private final int timeout;
     private final MulticastSocket socket;
 
-    public MultiCastReceiver(String group, int groupPort) throws IOException {
+    public MultiCastReceiver(String group, int groupPort, int timeout) throws IOException {
         this.group = group;
         this.groupPort = groupPort;
         List<InetAddress> addrList = NetworkUtils.getAvailableIPv4Adresses();
-        if (addrList.isEmpty())
-        {
+        if (addrList.isEmpty()) {
             throw new IOException("No available IP v4 interfaces");
         }
         this.socket = new MulticastSocket(groupPort);
+        this.socket.setSoTimeout(this.timeout = timeout);
         this.socket.setInterface(addrList.get(0));
+    }
+    
+    public MultiCastReceiver(String group, int groupPort) throws IOException {
+        this(group, groupPort, 0);
     }
 
     public boolean isActive() {
@@ -44,6 +50,10 @@ public class MultiCastReceiver implements Runnable {
     public int getGroupPort() {
         return groupPort;
     }
+    
+    public int getTimeout() {
+        return timeout;
+    }
 
     @Override
     public void run() {
@@ -51,14 +61,17 @@ public class MultiCastReceiver implements Runnable {
             InetAddress address = InetAddress.getByName(group);
             try (MulticastSocket clientSocket = this.socket) {
                 clientSocket.joinGroup(address);
-                byte buffer[] = new byte[1024*2];
+                byte buffer[] = new byte[1024 * 2];
                 int count = 0;
-                while(isActive() && Thread.currentThread().isAlive() && count < 100)
-                {
+                while (isActive() && Thread.currentThread().isAlive() && count < 100) {
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                    clientSocket.receive(packet);
-                    String data = new String(buffer, 0, buffer.length);
-                    System.out.println("Received: " + data);
+                    try {
+                        clientSocket.receive(packet);
+                        String data = new String(buffer, 0, buffer.length);
+                        System.out.println("Received: " + data);
+                    } catch (SocketTimeoutException ex) {
+                        System.out.println("No packets");
+                    }
                     Thread.sleep(100);
                     ++count;
                 }
@@ -68,6 +81,7 @@ public class MultiCastReceiver implements Runnable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(MultiCastReceiver.class.getName()).log(Level.SEVERE, null, ex);
             }
+
         } catch (UnknownHostException ex) {
             Logger.getLogger(MultiCastReceiver.class.getName()).log(Level.SEVERE, null, ex);
         }
