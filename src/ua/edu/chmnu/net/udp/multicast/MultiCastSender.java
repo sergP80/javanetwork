@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,13 +15,13 @@ public class MultiCastSender implements Runnable {
     private final String group;
     private final int groupPort;
     private boolean active = true;
-    private final DatagramSocket socket;
+    private final MulticastSocket socket;
     private MultiCastDataAction action;
 
-    public MultiCastSender(String group, int groupPort) throws SocketException {
+    public MultiCastSender(String group, int groupPort) throws IOException {
         this.group = group;
         this.groupPort = groupPort;
-        this.socket = new DatagramSocket();
+        this.socket = new MulticastSocket();
     }
 
     public String getGroup() {
@@ -45,7 +44,7 @@ public class MultiCastSender implements Runnable {
     public void run() {
         try {
             InetAddress address = InetAddress.getByName(group);
-            try (DatagramSocket sender = this.socket) {
+            try (MulticastSocket sender = this.socket) {
                 System.out.println("Multicast sender started");
                 while (this.action != null && isActive()) {
                     byte[] data = action.getBytes();
