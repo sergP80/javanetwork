@@ -1,17 +1,14 @@
 package ua.edu.chmnu.ki.networks.udp.swing_game.core;
 
-import ua.edu.chmnu.ki.networks.udp.swing_game.models.GamerInfo;
+import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Gamer;
+import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.GamerLeave;
+import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.GamerLocation;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class UdpReceiver implements Runnable {
@@ -19,9 +16,18 @@ public class UdpReceiver implements Runnable {
 
     private Boolean active = true;
 
-    private ArrayBlockingQueue<GamerInfo> gamerInfoQueue = new ArrayBlockingQueue<>(500);
+    private final GamerPool gamerPool;
 
-    public UdpReceiver() throws SocketException {
+    public UdpReceiver(GamerPool gamerPool) {
+        try {
+            init();
+            this.gamerPool = gamerPool;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private void init() throws Exception {
         this.socket = new DatagramSocket();
     }
 
@@ -31,13 +37,6 @@ public class UdpReceiver implements Runnable {
 
     public void active(Boolean active) {
         this.active = active;
-    }
-
-    public GamerInfo poll() {
-        return gamerInfoQueue.poll();
-    }
-    public boolean isEmpty() {
-        return gamerInfoQueue.peek() == null;
     }
 
     @Override
@@ -50,9 +49,17 @@ public class UdpReceiver implements Runnable {
 
                 try(ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
                     ObjectInputStream is = new ObjectInputStream(bis)) {
-                    GamerInfo gamerInfo = (GamerInfo)is.readObject();
-                    gamerInfoQueue.offer(gamerInfo, 10000, TimeUnit.SECONDS);
-                } catch (IOException | ClassNotFoundException | InterruptedException e) {
+                    Object data = is.readObject();
+                    if (data instanceof Gamer) {
+                        gamerPool.add((Gamer)data);
+                    } else if (data instanceof GamerLocation) {
+                        GamerLocation location = (GamerLocation)data;
+                        gamerPool.updateLocation(location.getGamerId(), location.getPosition());
+                    } else if (data instanceof GamerLeave) {
+                        GamerLeave leave = (GamerLeave) data;
+                        gamerPool.remove(leave.getGamerId());
+                    }
+                } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
 
