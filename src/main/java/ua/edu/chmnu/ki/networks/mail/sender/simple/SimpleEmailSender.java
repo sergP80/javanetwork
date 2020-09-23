@@ -1,5 +1,7 @@
 package ua.edu.chmnu.ki.networks.mail.sender.simple;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -12,7 +14,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 public class SimpleEmailSender {
-    private static final String PROPERTY_FILE_NAME = "sender.mail.properties";
+    private static final String PROPERTY_FILE_NAME = "/sender.mail.properties";
     private final String smtpUser;
     private final String smtpPassword;
 
@@ -23,8 +25,7 @@ public class SimpleEmailSender {
 
     private Session getSession() throws IOException {
         Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream(PROPERTY_FILE_NAME));
-        System.out.println(properties);
+        properties.load(SimpleEmailSender.class.getResourceAsStream(PROPERTY_FILE_NAME));
         Authenticator authenticator = new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -53,11 +54,31 @@ public class SimpleEmailSender {
 
     public static void main(String[] args) throws IOException, MessagingException {
         Console console = System.console();
-        console.printf("Enter smtp user: ");
-        String smtpUser = console.readLine();
-        console.printf("Enter smtp password: ");
-        String smtpPassword = new String(console.readPassword());
-        new SimpleEmailSender(smtpUser, smtpPassword)
-                .send("My first init message", "admin@mail.com", new String[]{"fesewo3697@oniaj.com"}, "Hellios is available");
+        do {
+            console.printf("Enter smtp user: ");
+            String smtpUser = console.readLine();
+            console.printf("Enter smtp password: ");
+            String smtpPassword = new String(console.readPassword());
+            console.printf("Enter recipient(s): ");
+            String line = console.readLine();
+            if (StringUtils.isEmpty(line)) {
+                throw new IllegalArgumentException("Enter a valid emails");
+            }
+            String[] recipients = line.split("[\\s;:]+");
+            console.printf("Type message: ");
+            String text = console.readLine();
+            if (StringUtils.isEmpty(text)) {
+                throw new IllegalArgumentException("Type a valid message");
+            }
+            new SimpleEmailSender(smtpUser, smtpPassword)
+                    .send("My first init message", "admin@mail.com", recipients, text);
+
+            console.printf("Continue - any key, Q - exit");
+            line = console.readLine();
+            if ("Q".equals(line)) {
+                break;
+            }
+        } while (true);
+
     }
 }
