@@ -1,4 +1,4 @@
-package ua.edu.chmnu.ki.networks.mail.sender.simple;
+package ua.edu.chmnu.ki.networks.mail.smtp;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 public class SimpleEmailSender {
-    private static final String PROPERTY_FILE_NAME = "/sender.mail.properties";
+    private static final String PROPERTY_FILE_NAME = "/smtp.settings.properties";
     private final String smtpUser;
     private final String smtpPassword;
 
