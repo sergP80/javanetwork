@@ -2,7 +2,7 @@ package ua.edu.chmnu.ki.networks.mail.smtp.senders;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import ua.edu.chmnu.ki.networks.mail.smtp.utils.SmtpUtils;
+import ua.edu.chmnu.ki.networks.mail.utils.MailUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -38,7 +38,7 @@ public class HtmlSmtpSender extends AbstractSmtpSender {
         } else {
             is = HtmlSmtpSender.class.getResourceAsStream(DEFAULT_HTML_ROOT + "/" + templateName);
         }
-        return SmtpUtils.readFileContent(is);
+        return MailUtils.readFileContent(is);
     }
 
     private String getTemplateName(String templateName) {

@@ -1,7 +1,6 @@
-package ua.edu.chmnu.ki.networks.mail.smtp.utils;
+package ua.edu.chmnu.ki.networks.mail.utils;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -14,10 +13,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class SmtpUtils {
-    private SmtpUtils() {
+public class MailUtils {
+    private MailUtils() {
     }
 
     public static InternetAddress[] getInetAddressList(String[] addresses) {
@@ -52,5 +53,13 @@ public class SmtpUtils {
         return new BufferedReader(new InputStreamReader(is))
                 .lines()
                 .collect(Collectors.joining("\n"));
+    }
+
+    public static final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+
+    public static boolean isEmailValid(String email) {
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }

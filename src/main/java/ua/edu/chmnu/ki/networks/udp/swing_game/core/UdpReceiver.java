@@ -29,6 +29,7 @@ public class UdpReceiver implements Runnable {
 
     private void init() throws Exception {
         this.socket = new DatagramSocket();
+        System.out.println("Used port [" + this.socket.getLocalPort() + "]");
     }
 
     public Boolean active() {

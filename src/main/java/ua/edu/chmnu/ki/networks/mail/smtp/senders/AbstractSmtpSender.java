@@ -3,7 +3,7 @@ package ua.edu.chmnu.ki.networks.mail.smtp.senders;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import ua.edu.chmnu.ki.networks.mail.smtp.SimpleEmailSender;
-import ua.edu.chmnu.ki.networks.mail.smtp.utils.SmtpUtils;
+import ua.edu.chmnu.ki.networks.mail.utils.MailUtils;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -82,34 +82,34 @@ public abstract class AbstractSmtpSender implements SmtpSender {
 
     public AbstractSmtpSender withRecipients(String[] recipientList) throws MessagingException {
         Objects.requireNonNull(this.mimeMessage);
-        this.mimeMessage.setRecipients(Message.RecipientType.TO, SmtpUtils.getInetAddressList(recipientList));
+        this.mimeMessage.setRecipients(Message.RecipientType.TO, MailUtils.getInetAddressList(recipientList));
         return this;
     }
 
     public AbstractSmtpSender withCc(String[] ccList) throws MessagingException {
         if (ObjectUtils.isNotEmpty(this.mimeMessage) && ObjectUtils.isNotEmpty(ccList)) {
-            this.mimeMessage.setRecipients(Message.RecipientType.CC, SmtpUtils.getInetAddressList(ccList));
+            this.mimeMessage.setRecipients(Message.RecipientType.CC, MailUtils.getInetAddressList(ccList));
         }
         return this;
     }
 
     public AbstractSmtpSender withBcc(String[] bccList) throws MessagingException {
         if (ObjectUtils.isNotEmpty(this.mimeMessage) && ObjectUtils.isNotEmpty(bccList)) {
-            this.mimeMessage.setRecipients(Message.RecipientType.BCC, SmtpUtils.getInetAddressList(bccList));
+            this.mimeMessage.setRecipients(Message.RecipientType.BCC, MailUtils.getInetAddressList(bccList));
         }
         return this;
     }
 
     public AbstractSmtpSender withReplyTo(String[] replyTo) throws MessagingException {
         if (ObjectUtils.isNotEmpty(this.mimeMessage) && ObjectUtils.isNotEmpty(replyTo)) {
-            this.mimeMessage.setReplyTo(SmtpUtils.getInetAddressList(replyTo));
+            this.mimeMessage.setReplyTo(MailUtils.getInetAddressList(replyTo));
         }
         return this;
     }
 
     @Override
     public void send() throws MessagingException, IOException {
-        SmtpUtils.verifyRequiredSettings(this.mimeMessage);
+        MailUtils.verifyRequiredSettings(this.mimeMessage);
         Transport.send(mimeMessage);
     }
 }

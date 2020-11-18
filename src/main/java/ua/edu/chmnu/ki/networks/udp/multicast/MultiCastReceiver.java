@@ -64,7 +64,7 @@ public class MultiCastReceiver implements Runnable {
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                     try {
                         clientSocket.receive(packet);
-                        String data = new String(buffer, 0, buffer.length);
+                        String data = new String(buffer, 0, packet.getLength());
                         System.out.println("Received: " + data);
                     } catch (SocketTimeoutException ex) {
                         System.out.println("No packets");
