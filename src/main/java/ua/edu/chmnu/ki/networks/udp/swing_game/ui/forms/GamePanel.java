@@ -5,7 +5,6 @@ import ua.edu.chmnu.ki.networks.udp.swing_game.core.UdpSender;
 import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Gamer;
 import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.GamerLocation;
 import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Position;
-import ua.edu.chmnu.ki.networks.udp.swing_game.models.shapes.ShapeContext;
 import ua.edu.chmnu.ki.networks.udp.swing_game.ui.graphics.GraphicShape2DContext;
 
 import javax.swing.*;

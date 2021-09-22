@@ -3,7 +3,6 @@ package ua.edu.chmnu.ki.networks.udp.swing_game.core;
 import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.GamerLocation;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;

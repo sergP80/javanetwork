@@ -6,7 +6,6 @@ import ua.edu.chmnu.ki.networks.mail.utils.MailUtils;
 import javax.mail.*;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Properties;
 import java.util.function.Consumer;
 

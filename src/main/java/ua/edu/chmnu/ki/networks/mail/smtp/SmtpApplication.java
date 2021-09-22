@@ -6,15 +6,8 @@ import ua.edu.chmnu.ki.networks.mail.smtp.factories.SmtpSenderFactory;
 import ua.edu.chmnu.ki.networks.mail.smtp.senders.SmtpSender;
 
 import javax.mail.*;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.io.Console;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Properties;
 
 public class SmtpApplication {
     private static EmailType selectEmailType() {

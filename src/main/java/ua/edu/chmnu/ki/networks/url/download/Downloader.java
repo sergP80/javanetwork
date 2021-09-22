@@ -1,16 +1,7 @@
 package ua.edu.chmnu.ki.networks.url.download;
 
-import sun.nio.cs.StandardCharsets;
-
 import java.io.*;
-import java.net.ConnectException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
+import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,8 +21,8 @@ public class Downloader implements Runnable {
     /**
      * Constructor of download thread
      *
-     * @param url - source file URL
-     * @param destDir - destination directory
+     * @param url      - source file URL
+     * @param destDir  - destination directory
      * @param progress - progress
      * @throws MalformedURLException
      */
@@ -53,9 +44,9 @@ public class Downloader implements Runnable {
     /**
      * Constructor of download thread
      *
-     * @param url - source file URL
-     * @param destDir - destination directory
-     * @param progress - progress
+     * @param url        - source file URL
+     * @param destDir    - destination directory
+     * @param progress   - progress
      * @param bufferSize - size of buffer to download
      * @throws MalformedURLException
      */
@@ -100,8 +91,8 @@ public class Downloader implements Runnable {
     public Thread getWorkThread() {
         return workThread;
     }
-    
-    public void start() {                
+
+    public void start() {
         active = true;
         workThread = new Thread(this);
         workThread.start();
@@ -116,7 +107,7 @@ public class Downloader implements Runnable {
         HttpURLConnection urlConnection = null;
 
         try {
-            urlConnection = (HttpURLConnection)srcUrl.openConnection();
+            urlConnection = (HttpURLConnection) srcUrl.openConnection();
 
             if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new ConnectException();
@@ -136,8 +127,7 @@ public class Downloader implements Runnable {
                     }
                 }
             }
-        }
-        finally {
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
