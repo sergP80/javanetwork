@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 
 public class SimplePing {
 
-    public static void main(String[] args) throws UnknownHostException, IOException {
+    public static void main(String[] args) throws IOException {
         String host = args.length >= 1 ? args[0] : "localhost";
         int timeout = 1000;
         int count = 4;

@@ -9,8 +9,7 @@ import java.util.logging.Logger;
 public class NSLookup {
 
     private static InetAddress[] getBoundIPList(String host) throws UnknownHostException {
-        InetAddress[] iaList = InetAddress.getAllByName(host);
-        return iaList;
+        return InetAddress.getAllByName(host);
     }
 
     private static String enterHost(String[] args) {

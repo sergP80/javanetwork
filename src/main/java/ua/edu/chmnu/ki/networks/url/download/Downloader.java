@@ -108,12 +108,12 @@ public class Downloader implements Runnable {
 
         try {
             urlConnection = (HttpURLConnection) srcUrl.openConnection();
-
+            
             if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new ConnectException();
             }
-            try (InputStream in = new BufferedInputStream(srcUrl.openStream());
-                 OutputStream out = new BufferedOutputStream(new FileOutputStream(destPath));) {
+            try (InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                 OutputStream out = new BufferedOutputStream(new FileOutputStream(destPath))) {
 
                 byte[] buffer = new byte[this.bufferSize];
                 int count, readed = 0;
