@@ -5,3 +5,9 @@
 *.iml
 .idea
 target
+
+*.pdf
+*.djvu
+*.png
+*.jpeg
+*.jpg
