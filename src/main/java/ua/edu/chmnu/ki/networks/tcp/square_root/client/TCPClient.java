@@ -46,9 +46,7 @@ public class TCPClient implements Runnable {
 
         } catch (SocketTimeoutException ex) {
             System.out.println("No ops on the socket: " + ex.getMessage());
-        } catch (IOException ex) {
-            Logger.getLogger(TCPClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(TCPClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception e) {
             e.printStackTrace();

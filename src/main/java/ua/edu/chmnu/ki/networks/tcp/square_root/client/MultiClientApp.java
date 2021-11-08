@@ -40,7 +40,7 @@ public class MultiClientApp {
     public static class ServerResponseHandlerImpl implements ServerResponseHandler {
 
         @Override
-        public void handle(Object r) throws Exception {
+        public void handle(Object r) {
             Response response = (Response) r;
             switch (response.getResult()) {
                 case NO_ROOTS:

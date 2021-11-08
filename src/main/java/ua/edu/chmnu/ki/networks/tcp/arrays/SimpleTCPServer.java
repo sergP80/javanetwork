@@ -22,22 +22,22 @@ public class SimpleTCPServer implements Runnable {
     private ExecutorService executor;
     private boolean active = true;
 
-    public SimpleTCPServer(String host, int port, int backlog) throws UnknownHostException, IOException {
+    public SimpleTCPServer(String host, int port, int backlog) throws IOException {
         this.host = host;
         this.port = port;
         this.backlog = backlog;
         this.serverSocket = new ServerSocket(port, backlog, InetAddress.getByName(host));        
     }
 
-    public SimpleTCPServer(int port, int backlog) throws UnknownHostException, IOException {
+    public SimpleTCPServer(int port, int backlog) throws IOException {
         this(DEFAULT_HOST, port, backlog);
     }
 
-    public SimpleTCPServer(int port) throws UnknownHostException, IOException {
+    public SimpleTCPServer(int port) throws IOException {
         this(DEFAULT_HOST, port, DEFAULT_BACKLOG);
     }
     
-    public SimpleTCPServer() throws UnknownHostException, IOException {
+    public SimpleTCPServer() throws IOException {
         this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_BACKLOG);
     }
 

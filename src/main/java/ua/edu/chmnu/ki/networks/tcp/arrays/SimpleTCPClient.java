@@ -31,9 +31,8 @@ public class SimpleTCPClient<T> implements Runnable {
     @Override
     public void run() {
         try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());) {
-            //Thread.sleep(1000);
-            out.writeObject(new Request<T>(data));
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+            out.writeObject(new Request<>(data));
             Object r = in.readObject();
             System.out.printf("[%s:%d] Received: %s\n", 
                     socket.getInetAddress().toString(), socket.getPort(),
@@ -42,11 +41,9 @@ public class SimpleTCPClient<T> implements Runnable {
         }catch (SocketTimeoutException ex)
         {
             System.out.println("No ops on the socket: " + ex.getMessage());  
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(SimpleTCPClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SimpleTCPClient.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
     }
 
 }
