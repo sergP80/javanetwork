@@ -1,11 +1,11 @@
 package ua.edu.chmnu.ki.networks.common;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CmdLineParser {
 	private final Map<String, String> data;
@@ -29,6 +29,19 @@ public class CmdLineParser {
 
 	public String getStringOption(String key) {
 		return getOption(key, s -> s);
+	}
+
+	public List<String> getStringArrayOption(String key, String splitter) {
+		return getOption(key, s ->
+				Arrays.stream(s.split(splitter))
+						.map(String::trim)
+						.filter(StringUtils::isNotEmpty)
+						.collect(Collectors.toList())
+		);
+	}
+
+	public List<String> getStringArrayOption(String key) {
+		return getStringArrayOption(key, "[;,:]");
 	}
 
 	public String getStringOption(String key, String defValue) {

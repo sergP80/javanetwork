@@ -10,7 +10,8 @@ import java.util.logging.Logger;
 /**
  * This class is the abstraction of single download thread
  */
-public class Downloader implements Runnable {
+public class Downloader implements Runnable, ProgressSupport {
+	private static final Logger LOGGER = Logger.getLogger(Downloader.class.getName());
 
 	private final URL srcUrl;
 	private final String srcFileName;
@@ -75,7 +76,8 @@ public class Downloader implements Runnable {
 		return destDir;
 	}
 
-	public ProgressIndicate getProgress() {
+	@Override
+	public ProgressIndicate progressIndicate() {
 		return progress;
 	}
 
@@ -168,10 +170,8 @@ public class Downloader implements Runnable {
 	public void run() {
 		try {
 			downloadFromStream(progress);
-		} catch (InterruptedException ex) {
-			Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (Exception ex) {
-			Logger.getLogger(DownloaderDemo.class.getName()).log(Level.SEVERE, null, ex);
+			LOGGER.log(Level.SEVERE, null, ex);
 		}
 	}
 
