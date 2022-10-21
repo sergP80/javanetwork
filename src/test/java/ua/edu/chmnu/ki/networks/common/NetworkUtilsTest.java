@@ -1,21 +1,19 @@
 package ua.edu.chmnu.ki.networks.common;
 
-import junitparams.JUnitParamsRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.List;
 
-@RunWith(JUnitParamsRunner.class)
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 public class NetworkUtilsTest {
 
     @Test
     public void test01() throws SocketException {
         List<InetAddress> addressList = NetworkUtils.getAvailableInetAddresses();
         addressList.forEach(System.out::println);
-        Assert.assertFalse(addressList.isEmpty());
+        assertFalse(addressList.isEmpty());
     }
 }
