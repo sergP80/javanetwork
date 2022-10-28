@@ -1,5 +1,6 @@
 package ua.edu.chmnu.ki.networks.url.download;
 
-public interface ProgressIndicate {
+@FunctionalInterface
+public interface ProgressIndicator {
     void progress(int count, long total);
 }

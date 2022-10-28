@@ -1,44 +1,47 @@
 package ua.edu.chmnu.ki.networks.url.download;
 
-import java.io.*;
-import java.net.*;
+import lombok.Getter;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * This class is the abstraction of single download thread
  */
+@Getter
 public class Downloader implements Runnable {
 
     private final URL srcUrl;
-    private final String srcFileName;
     private final String destDir;
-    private final ProgressIndicate progress;
+    private final ProgressIndicator progressIndicator;
     private int bufferSize = 64;
     private boolean active;
-    private Thread workThread = null;
 
     /**
      * Constructor of download thread
      *
      * @param url      - source file URL
      * @param destDir  - destination directory
-     * @param progress - progress
+     * @param progressIndicator - progress
      * @throws MalformedURLException
      */
-    public Downloader(String url, String destDir, ProgressIndicate progress) throws MalformedURLException, UnsupportedEncodingException {
+    public Downloader(String url, String destDir, ProgressIndicator progressIndicator) throws MalformedURLException, UnsupportedEncodingException {
         this.srcUrl = new URL(url);
         this.destDir = destDir;
-        this.progress = progress;
-        String decodedUrl = URLDecoder.decode(url, "UTF-8");
-        int idx = decodedUrl.lastIndexOf('/');
-        if (idx < 0) {
-            throw new MalformedURLException(url);
-        }
-
-        this.srcFileName = decodedUrl.substring(idx + 1);
+        this.progressIndicator = progressIndicator;
         this.active = false;
-        checkDestDir();
     }
 
     /**
@@ -46,12 +49,12 @@ public class Downloader implements Runnable {
      *
      * @param url        - source file URL
      * @param destDir    - destination directory
-     * @param progress   - progress
+     * @param progressIndicator   - progress
      * @param bufferSize - size of buffer to download
      * @throws MalformedURLException
      */
-    public Downloader(String url, String destDir, ProgressIndicate progress, int bufferSize) throws MalformedURLException, UnsupportedEncodingException {
-        this(url, destDir, progress);
+    public Downloader(String url, String destDir, ProgressIndicator progressIndicator, int bufferSize) throws MalformedURLException, UnsupportedEncodingException {
+        this(url, destDir, progressIndicator);
         this.bufferSize = bufferSize;
     }
 
@@ -64,46 +67,19 @@ public class Downloader implements Runnable {
         }
     }
 
-    public String getSrcUrl() {
-        return srcUrl.toString();
-    }
-
-    public String getDestDir() {
-        return destDir;
-    }
-
-    public ProgressIndicate getProgress() {
-        return progress;
-    }
-
-    public int getBufferSize() {
-        return bufferSize;
-    }
-
-    public void setBufferSize(int bufferSize) {
-        this.bufferSize = bufferSize;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public Thread getWorkThread() {
-        return workThread;
-    }
-
     public void start() {
         active = true;
-        workThread = new Thread(this);
-        workThread.start();
     }
 
     public void terminate() {
         active = false;
     }
 
-    protected void downloadFromStream(ProgressIndicate progress) throws Exception {
-        String destPath = destDir + File.separator + srcFileName;
+    protected void runDownload() throws Exception {
+        if (!active) {
+            return;
+        }
+
         HttpURLConnection urlConnection = null;
 
         try {
@@ -112,8 +88,14 @@ public class Downloader implements Runnable {
             if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new ConnectException();
             }
+
+            String srcFileName = Optional.ofNullable(getFileNameFromHeader(urlConnection))
+                    .orElseGet(() -> getFileNameFromUrl(srcUrl));
+            String destPath = destDir + File.separator + srcFileName;
+            checkDestDir();
+
             try (InputStream in = new BufferedInputStream(srcUrl.openStream());
-                 OutputStream out = new BufferedOutputStream(new FileOutputStream(destPath));) {
+                 OutputStream out = new BufferedOutputStream(new FileOutputStream(destPath))) {
 
                 byte[] buffer = new byte[this.bufferSize];
                 int count, readed = 0;
@@ -121,9 +103,8 @@ public class Downloader implements Runnable {
                 while ((count = in.read(buffer, 0, this.bufferSize)) != -1 && active) {
                     readed += count;
                     out.write(buffer, 0, count);
-                    if (progress != null) {
-                        progress.progress(readed, total);
-
+                    if (progressIndicator != null) {
+                        progressIndicator.progress(readed, total);
                     }
                 }
             }
@@ -134,14 +115,36 @@ public class Downloader implements Runnable {
         }
     }
 
+    private String getFileNameFromUrl(URL srcUrl) {
+        String path = srcUrl.getPath();
+        int idx = path.lastIndexOf('/');
+        if (idx < 0) {
+            throw new RuntimeException("File name is not present");
+        }
+        return path.substring(idx + 1);
+    }
+
+    private String getFileNameFromHeader(HttpURLConnection urlConnection) {
+        String header = urlConnection.getHeaderField("Content-Disposition");
+        if (header == null) {
+            return null;
+        }
+        final String tag = "filename=";
+        int idx = header.indexOf(tag);
+        if (idx < 0) {
+            return null;
+        }
+        return header.substring(idx + tag.length());
+    }
+
     @Override
     public void run() {
         try {
-            downloadFromStream(progress);
+            runDownload();
         } catch (InterruptedException ex) {
             Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
-            Logger.getLogger(DownloaderDemo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DownloaderApplication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

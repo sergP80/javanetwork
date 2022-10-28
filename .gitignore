@@ -5,3 +5,8 @@
 *.iml
 .idea
 target
+
+*.pdf
+*.txt
+*.zip
+*.rar
