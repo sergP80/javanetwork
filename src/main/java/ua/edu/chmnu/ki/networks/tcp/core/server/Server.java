@@ -1,7 +1,5 @@
 
-package ua.edu.chmnu.ki.networks.tcp.square_root.server;
-
-import ua.edu.chmnu.ki.networks.tcp.ServerSessionHandler;
+package ua.edu.chmnu.ki.networks.tcp.core.server;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -20,20 +18,21 @@ public class Server implements Runnable {
     private final int backlog;
     private final ServerSocket serverSocket;
 
-    private ExecutorService executor;
+    private final ExecutorService executor;
     private boolean active = true;
-    private final ServerSessionHandler handler;
+    private final ClientSessionDelegate handler;
 
-    public Server(String host, int port, int backlog, ServerSessionHandler handler) throws IOException {
+    public Server(String host, int port, int backlog, ClientSessionDelegate handler, ExecutorService executor) throws IOException {
         this.host = host;
         this.port = port;
         this.backlog = backlog;
         this.handler = handler;
+        this.executor = executor;
         this.serverSocket = new ServerSocket(port, backlog, InetAddress.getByName(host));        
     }
     
-    public Server(ServerSessionHandler handler) throws IOException {
-        this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_BACKLOG, handler);
+    public Server(ClientSessionDelegate handler, ExecutorService executor) throws IOException {
+        this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_BACKLOG, handler, executor);
     }
 
     @Override
@@ -85,9 +84,5 @@ public class Server implements Runnable {
 
     public ExecutorService getExecutor() {
         return executor;
-    }
-
-    public void setExecutor(ExecutorService executor) {
-        this.executor = executor;
     }
 }

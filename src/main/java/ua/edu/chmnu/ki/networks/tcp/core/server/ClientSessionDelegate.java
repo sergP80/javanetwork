@@ -1,8 +1,8 @@
-package ua.edu.chmnu.ki.networks.tcp;
+package ua.edu.chmnu.ki.networks.tcp.core.server;
 
 import java.net.Socket;
 
 @FunctionalInterface
-public interface ServerSessionHandler {
+public interface ClientSessionDelegate {
     void handle(Socket socket) throws Exception;
 }

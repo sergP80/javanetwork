@@ -3,9 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ua.edu.chmnu.ki.networks.tcp.square_root.server;
-
-import ua.edu.chmnu.ki.networks.tcp.ServerSessionHandler;
+package ua.edu.chmnu.ki.networks.tcp.core.server;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -13,16 +11,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author svpuzyrov
  */
-public class ClientSession implements Runnable{
+public class ClientSession implements Runnable {
     private final Socket socket;
-    private final ServerSessionHandler handler;
+    private final ClientSessionDelegate delegate;
 
-    public ClientSession(Socket socket, ServerSessionHandler handler) throws IOException {
+    public ClientSession(Socket socket, ClientSessionDelegate delegate) throws IOException {
         this.socket = socket;
-        this.handler = handler;
+        this.delegate = delegate;
     }
 
     public Socket getSocket() {
@@ -31,32 +28,28 @@ public class ClientSession implements Runnable{
 
     @Override
     public void run() {
-        String from = String.format("[%s:%d]", 
-                                    socket.getInetAddress().toString(),
-                                    socket.getPort());
+        String from = String.format("[%s:%d]",
+                socket.getInetAddress().toString(),
+                socket.getPort());
         try {
-           handler.handle(socket);
+            delegate.handle(socket);
         } catch (Exception ex) {
             String what;
             String action = "shutdown";
-            if (socket.isInputShutdown())
-            {
+            if (socket.isInputShutdown()) {
                 what = "Input stream";
-                
-            }
-            else if (socket.isOutputShutdown())
-            {
+
+            } else if (socket.isOutputShutdown()) {
                 what = "Output stream";
-            } else if (socket.isClosed())
-            {
+            } else if (socket.isClosed()) {
                 what = "Connection";
             } else {
                 what = "Unknown error";
                 action = ex.getMessage();
                 Logger.getLogger(ClientSession.class.getName()).log(Level.SEVERE, null, ex);
-            }            
+            }
             System.out.printf("%s from %s was %s\n", what, from, action);
         }
     }
-    
+
 }

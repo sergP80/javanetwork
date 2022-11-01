@@ -3,9 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ua.edu.chmnu.ki.networks.tcp.square_root.client;
-
-import ua.edu.chmnu.ki.networks.tcp.ServerResponseHandler;
+package ua.edu.chmnu.ki.networks.tcp.core.client;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -21,13 +19,13 @@ public class TCPClient implements Runnable {
     private final int port;
     private final Object data;
     private final Socket socket;
-    private final ServerResponseHandler handler;
+    private final ServerResponseDelegate delegate;
 
-    public TCPClient(String host, int port, Object data, ServerResponseHandler handler) throws IOException {
+    public TCPClient(String host, int port, Object data, ServerResponseDelegate delegate) throws IOException {
         this.host = host;
         this.port = port;
         this.data = data;
-        this.handler = handler;
+        this.delegate = delegate;
         this.socket = new Socket(host, port);
         this.socket.setSoTimeout(1000);
     }
@@ -42,13 +40,11 @@ public class TCPClient implements Runnable {
             System.out.printf("[%s:%d] Received: %s\n",
                     socket.getInetAddress().toString(), socket.getPort(),
                     response.toString());
-            handler.handle(response);
+            delegate.handle(response);
 
         } catch (SocketTimeoutException ex) {
             System.out.println("No ops on the socket: " + ex.getMessage());
-        } catch (IOException ex) {
-            Logger.getLogger(TCPClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(TCPClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception e) {
             e.printStackTrace();

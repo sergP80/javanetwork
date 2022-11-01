@@ -1,6 +1,6 @@
 package ua.edu.chmnu.ki.networks.tcp.square_root.server;
 
-import ua.edu.chmnu.ki.networks.tcp.ServerSessionHandler;
+import ua.edu.chmnu.ki.networks.tcp.core.server.ClientSessionDelegate;
 import ua.edu.chmnu.ki.networks.tcp.simple.ServerClientSession;
 import ua.edu.chmnu.ki.networks.tcp.square_root.model.Request;
 import ua.edu.chmnu.ki.networks.tcp.square_root.model.Response;
@@ -12,7 +12,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ServerSessionHandlerImpl implements ServerSessionHandler {
+public class DefaultClientSessionDelegate implements ClientSessionDelegate {
     @Override
     public void handle(Socket socket) throws Exception {
         try (ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
