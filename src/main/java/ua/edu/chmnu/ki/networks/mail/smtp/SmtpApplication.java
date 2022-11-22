@@ -18,26 +18,35 @@ public class SmtpApplication {
             console.printf("-> %s [%d]\n", values[i], i + 1);
         }
         console.printf("Select e-mail type: ");
-        return EmailType.valueOf(console.readLine());
+        return EmailType.of(Integer.parseInt(console.readLine()) - 1);
     }
 
     private static void addSmtpParams(EmailType emailType, SmtpSenderParams.SmtpSenderParamsBuilder paramsBuilder) {
         Console console = System.console();
 
         switch (emailType) {
-            case HTML:
+            case HTML -> {
                 console.printf("Type email template name: ");
                 paramsBuilder.templateName(console.readLine());
-                break;
-
-            case HTML_MULTI_PART:
+            }
+            case HTML_MULTI_PART -> {
                 console.printf("Type email template name: ");
                 paramsBuilder.templateName(console.readLine());
-                break;
-            default:
+                console.printf("Type attachments: ");
+                paramsBuilder.attachments(splitBy(console.readLine()));
+            }
+            default -> {
                 console.printf("Type text message: ");
                 paramsBuilder.text(console.readLine());
+            }
         }
+    }
+
+    private static String[] splitBy(String source) {
+        if (StringUtils.isEmpty(source)) {
+            throw new IllegalArgumentException("Enter a non-empty string");
+        }
+        return source.split("[\\s;:]+");
     }
 
     public static void main(String[] args) throws IOException, MessagingException {
@@ -60,11 +69,7 @@ public class SmtpApplication {
             smtpSenderParamsBuilder.from(console.readLine());
 
             console.printf("Enter recipient(s): ");
-            String line = console.readLine();
-            if (StringUtils.isEmpty(line)) {
-                throw new IllegalArgumentException("Enter a valid emails");
-            }
-            String[] recipients = line.split("[\\s;:]+");
+            String[] recipients = splitBy(console.readLine());
             smtpSenderParamsBuilder.recipients(recipients);
             addSmtpParams(emailType, smtpSenderParamsBuilder);
 
@@ -77,7 +82,7 @@ public class SmtpApplication {
             console.printf("Done!\n");
             console.printf("Continue - any key, Q - exit");
 
-            line = console.readLine();
+            String line = console.readLine();
             if ("Q".equals(line)) {
                 break;
             }

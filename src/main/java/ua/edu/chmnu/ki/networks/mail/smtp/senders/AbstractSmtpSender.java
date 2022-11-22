@@ -16,8 +16,8 @@ import java.util.Properties;
 public abstract class AbstractSmtpSender implements SmtpSender {
     private static final String SMTP_SETTINGS = "smtp.settings";
 
-    private Session session;
-    private MimeMessage mimeMessage;
+    private final Session session;
+    private final MimeMessage mimeMessage;
 
     public AbstractSmtpSender(Session session) {
         this.session = session;
