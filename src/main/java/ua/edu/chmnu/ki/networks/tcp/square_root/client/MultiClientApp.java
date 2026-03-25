@@ -11,6 +11,7 @@ import ua.edu.chmnu.ki.networks.tcp.square_root.model.Request;
 import ua.edu.chmnu.ki.networks.tcp.square_root.model.Response;
 
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,16 +26,38 @@ public class MultiClientApp {
                 {1, 4, 4}
         };
 
-        String host = "127.0.0.1";
-        int port = 5558;
-        int poolSize = Integer.parseInt(System.getProperty("client.pool-size", "10"));
-        ExecutorService executor = Executors.newFixedThreadPool(poolSize);
-        for (double[] data : testData) {
-            executor.submit(new TCPClient(host, port, new Request(data), new ServerResponseDelegateImpl()));
+        String connectionUrl;
+
+        if (args == null || args.length == 0) {
+            try (Scanner scanner = new Scanner(System.in)) {
+                System.out.print("Enter end-point:");
+
+                connectionUrl = scanner.nextLine();
+            }
+        } else {
+            connectionUrl = args[0];
         }
 
-        Thread.sleep(2000);
-        executor.shutdown();
+        int poolSize = Integer.parseInt(System.getProperty("client.pool-size", "10"));
+
+        try (ExecutorService executor = Executors.newFixedThreadPool(poolSize)) {
+            String[] urlParts = connectionUrl.split(":");
+
+            String host = urlParts[0];
+
+            int port = Integer.parseInt(urlParts[1]);
+
+//            String host = "5.tcp.eu.ngrok.io";
+//            int port = 14262;
+
+            for (double[] data : testData) {
+                executor.submit(new TCPClient(host, port, new Request(data), new ServerResponseDelegateImpl()));
+            }
+
+            Thread.sleep(2000);
+
+            executor.shutdown();
+        }
     }
 
     public static class ServerResponseDelegateImpl implements ServerResponseDelegate {
