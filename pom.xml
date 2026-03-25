@@ -78,6 +78,15 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.1</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.44</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -120,7 +129,7 @@
         <profile>
             <id>jdk-17</id>
             <activation>
-                <jdk>17</jdk>
+                <jdk>[17,18)</jdk>
             </activation>
             <properties>
                 <java.version>17</java.version>
@@ -130,7 +139,7 @@
         <profile>
             <id>jdk-21</id>
             <activation>
-                <jdk>21</jdk>
+                <jdk>[21,22)</jdk>
             </activation>
             <properties>
                 <java.version>21</java.version>
@@ -138,19 +147,9 @@
             </properties>
         </profile>
         <profile>
-            <id>jdk-23</id>
-            <activation>
-                <jdk>23</jdk>
-            </activation>
-            <properties>
-                <java.version>23</java.version>
-                <maven.compiler.release>${java.version}</maven.compiler.release>
-            </properties>
-        </profile>
-        <profile>
             <id>jdk-24</id>
             <activation>
-                <jdk>24</jdk>
+                <jdk>[24,25)</jdk>
             </activation>
             <properties>
                 <java.version>24</java.version>
@@ -160,7 +159,7 @@
         <profile>
             <id>jdk-25</id>
             <activation>
-                <jdk>25</jdk>
+                <jdk>[25,26)</jdk>
             </activation>
             <properties>
                 <java.version>25</java.version>
