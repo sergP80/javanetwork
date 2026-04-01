@@ -3,7 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ua.edu.chmnu.ki.networks.tcp.arrays;
+package ua.edu.chmnu.ki.networks.tcp.arrays.legacy;
+
+import lombok.Getter;
+import ua.edu.chmnu.ki.networks.tcp.arrays.model.Request;
+import ua.edu.chmnu.ki.networks.tcp.arrays.model.Response;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,6 +21,7 @@ import java.util.logging.Logger;
  * @author svpuzyrov
  */
 public class ServerClientSession implements Runnable {
+    @Getter
     private final Socket socket;
     private final ObjectInputStream inS;
     private final ObjectOutputStream outS;
@@ -27,13 +32,9 @@ public class ServerClientSession implements Runnable {
         outS = new ObjectOutputStream(socket.getOutputStream());
     }
 
-    public Socket getSocket() {
-        return socket;
-    }
-
     protected Response<Integer, Double> processRequest(Request<Integer> request) {
         Response<Integer, Double> response = new Response<>();
-        Integer[] array = request.getArray();
+        Integer[] array = request.array();
         response.setAvg(array[0].doubleValue());
         response.setMin(array[0]);
         response.setMax(array[0]);

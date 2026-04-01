@@ -1,4 +1,4 @@
-package ua.edu.chmnu.ki.networks.tcp.arrays;
+package ua.edu.chmnu.ki.networks.tcp.arrays.legacy;
 
 import java.io.IOException;
 import java.util.Scanner;

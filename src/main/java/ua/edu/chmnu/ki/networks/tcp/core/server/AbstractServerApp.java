@@ -1,15 +1,19 @@
 
 package ua.edu.chmnu.ki.networks.tcp.core.server;
 
+import lombok.Getter;
+
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Getter
 public abstract class AbstractServerApp {
     private static final int DEFAULT_POOL_SIZE = 20;
 
     private final int poolSize;
+
     private final ExecutorService executor;
 
     protected AbstractServerApp(int poolSize) {
@@ -20,14 +24,6 @@ public abstract class AbstractServerApp {
 
     public AbstractServerApp() {
         this(DEFAULT_POOL_SIZE);
-    }
-
-    public int getPoolSize() {
-        return poolSize;
-    }
-
-    public ExecutorService getExecutor() {
-        return executor;
     }
 
     public void runApp(String[] args, ClientSessionDelegate delegate) throws IOException {

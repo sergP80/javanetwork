@@ -32,7 +32,12 @@ public class Server implements Runnable {
     }
     
     public Server(ClientSessionDelegate handler, ExecutorService executor) throws IOException {
-        this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_BACKLOG, handler, executor);
+        this.host = System.getProperty("server.host", DEFAULT_HOST);
+        this.port = Integer.parseInt(System.getProperty("server.port", "" + DEFAULT_PORT));
+        this.backlog = Integer.parseInt(System.getProperty("server.back-log-size", "" + DEFAULT_BACKLOG));
+        this.handler = handler;
+        this.executor = executor;
+        this.serverSocket = new ServerSocket(port, backlog, InetAddress.getByName(host));
     }
 
     @Override

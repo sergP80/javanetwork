@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ua.edu.chmnu.ki.networks.tcp.arrays;
+package ua.edu.chmnu.ki.networks.tcp.arrays.client;
+
+import ua.edu.chmnu.ki.networks.tcp.arrays.model.Request;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -33,7 +35,7 @@ public class SimpleTCPClient<T> implements Runnable {
         try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream());) {
             //Thread.sleep(1000);
-            out.writeObject(new Request<T>(data));
+            out.writeObject(new Request<>(data));
             Object r = in.readObject();
             System.out.printf("[%s:%d] Received: %s\n", 
                     socket.getInetAddress().toString(), socket.getPort(),

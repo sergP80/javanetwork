@@ -1,5 +1,7 @@
 
-package ua.edu.chmnu.ki.networks.tcp.arrays;
+package ua.edu.chmnu.ki.networks.tcp.arrays.legacy;
+
+import lombok.Getter;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -8,6 +10,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 
+@Getter
 public class SimpleTCPServer implements Runnable {
 
     public static final String DEFAULT_HOST = "0.0.0.0";
@@ -59,26 +62,6 @@ public class SimpleTCPServer implements Runnable {
         }
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public int getBacklog() {
-        return backlog;
-    }
-
-    public ServerSocket getServerSocket() {
-        return serverSocket;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
     public void setActive(boolean active) throws IOException {
         this.active = active;
         if (!this.active) {
@@ -86,10 +69,6 @@ public class SimpleTCPServer implements Runnable {
                 this.serverSocket.close();
             }
         }
-    }
-
-    public ExecutorService getExecutor() {
-        return executor;
     }
 
     public void setExecutor(ExecutorService executor) {

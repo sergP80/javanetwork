@@ -66,10 +66,14 @@ public class MultiClientApp {
         public void handle(Object r) {
             Response response = (Response) r;
             switch (response.getResult()) {
-                case NO_ROOTS -> System.out.println("Has no roots");
-                case ONE_ROOT -> System.out.println("Two equal roots: x1=x2=" + response.getRoots()[0]);
-                default ->
-                        System.out.println("Two roots: x1=" + response.getRoots()[0] + ", x2=" + response.getRoots()[1]);
+                case NO_ROOTS:
+                    System.out.println("Has no roots");
+                    break;
+                case ONE_ROOT:
+                    System.out.println("Two equal roots: x1=x2=" + response.getRoots()[0]);
+                    break;
+                default:
+                    System.out.println("Two roots: x1=" + response.getRoots()[0] + ", x2=" + response.getRoots()[1]);
             }
         }
     }
