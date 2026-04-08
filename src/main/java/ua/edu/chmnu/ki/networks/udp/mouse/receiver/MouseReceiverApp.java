@@ -20,7 +20,7 @@ public class MouseReceiverApp {
         if (args.length > 0) {
             port = Integer.parseInt(args[0]);
         } else {
-            Integer result = new ConsoleReader().read(Integer::parseInt);
+            Integer result = new ConsoleReader("Enter port:").read(Integer::parseInt);
 
             port = Optional.ofNullable(result).orElse(DEFAULT_PORT);
         }
