@@ -27,6 +27,8 @@ public class MouseReceiverApp {
 
         Rectangle virtualBounds = DesktopBoundsUtils.getVirtualBounds();
 
+        System.out.println("Headless: " + java.awt.GraphicsEnvironment.isHeadless());
+
         Robot robot = new Robot();
 
         var handler = new MousePositionEventHandler(robot, virtualBounds);
