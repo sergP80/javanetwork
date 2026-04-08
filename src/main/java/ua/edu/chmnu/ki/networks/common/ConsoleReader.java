@@ -11,10 +11,6 @@ public class ConsoleReader {
         this.prompt = prompt;
     }
 
-    public ConsoleReader() {
-        this("");
-    }
-
     public <T> T read(Function<String, T> converter) {
 
         if (prompt != null && !prompt.isEmpty()) {
@@ -23,10 +19,19 @@ public class ConsoleReader {
 
         try (Scanner scanner = new Scanner(System.in)) {
             if (scanner.hasNextLine()) {
-                return converter.apply(scanner.nextLine());
-            }
-        }
+                String line = scanner.nextLine();
 
-        return null;
+                if (line == null || line.isEmpty()) {
+                    return null;
+                }
+
+                return converter.apply(line);
+            }
+
+            return null;
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

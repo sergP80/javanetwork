@@ -8,6 +8,7 @@ import ua.edu.chmnu.ki.networks.udp.core.sender.UdpObjectMessageSender;
 import ua.edu.chmnu.ki.networks.udp.mouse.provider.MousePositionEventProvider;
 
 import java.awt.*;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -19,7 +20,8 @@ public class MouseSenderApp {
         String connectionUrl;
 
         if (args == null || args.length == 0) {
-            connectionUrl = new ConsoleReader("Type target end-point <host:port>:").read(Function.identity());
+            connectionUrl = Optional.ofNullable(new ConsoleReader("Type target end-point <host:port>:").read(Function.identity()))
+                    .orElseThrow(() -> new IllegalArgumentException("Connection string is not present"));
         } else {
             connectionUrl = args[0];
         }
@@ -28,12 +30,13 @@ public class MouseSenderApp {
 
         var provider = new MousePositionEventProvider(virtualBounds);
 
-        try (var sender = new UdpObjectMessageSender<MousePositionEvent>(connectionUrl)) {
-            new SenderApp<>(sender, provider).runApp(args);
-            System.out.println("Sender started");
-            System.out.println("Sender virtual bounds: " + virtualBounds);
-            System.out.println("Target: " + connectionUrl);
-            System.out.println("Press Ctrl+C to stop");
-        }
+        var sender = new UdpObjectMessageSender<MousePositionEvent>(connectionUrl);
+
+        new SenderApp<>(sender, provider).runApp(args);
+        System.out.println("Sender started");
+        System.out.println("Sender virtual bounds: " + virtualBounds);
+        System.out.println("Target: " + connectionUrl);
+        System.out.println("Press Ctrl+C to stop");
+
     }
 }

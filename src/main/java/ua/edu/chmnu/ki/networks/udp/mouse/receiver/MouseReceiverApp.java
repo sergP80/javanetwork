@@ -20,7 +20,7 @@ public class MouseReceiverApp {
         if (args.length > 0) {
             port = Integer.parseInt(args[0]);
         } else {
-            Integer result = new ConsoleReader("Enter port:").read(Integer::parseInt);
+            Integer result = new ConsoleReader("Enter port (press Enter to use default):").read(Integer::parseInt);
 
             port = Optional.ofNullable(result).orElse(DEFAULT_PORT);
         }
@@ -31,14 +31,14 @@ public class MouseReceiverApp {
 
         var handler = new MousePositionEventHandler(robot, virtualBounds);
 
-        try (var receiver = new UdpObjectMessageReceiver<MousePositionEvent>(port)) {
-            new ReceiverApp<>(receiver, handler).runApp(args);
+        var receiver = new UdpObjectMessageReceiver<MousePositionEvent>(port);
 
-            System.out.println("Receiver started");
-            System.out.println("Receiver virtual bounds: " + virtualBounds);
-            System.out.println("Listen port: " + port);
-            System.out.println("Press Ctrl+C to stop");
-        }
+        new ReceiverApp<>(receiver, handler).runApp(args);
+
+        System.out.println("Receiver started");
+        System.out.println("Receiver virtual bounds: " + virtualBounds);
+        System.out.println("Listen port: " + port);
+        System.out.println("Press Ctrl+C to stop");
 
     }
 }
