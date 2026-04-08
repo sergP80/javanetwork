@@ -9,14 +9,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 @UtilityClass
-public class ObjectConverter {
+public class SerializeUtils {
 
     @SneakyThrows
-    public static <T> byte[] convertToByte(T source) {
+    public static <T> byte[] serialize(T source) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ObjectOutputStream os = new ObjectOutputStream(baos)
         ) {
             os.writeObject(source);
+
+            os.flush();
 
             return baos.toByteArray();
         }
@@ -24,11 +26,15 @@ public class ObjectConverter {
 
     @SuppressWarnings("unchecked")
     @SneakyThrows
-    public static <T> T convertFromByte(byte[] source, int length) {
+    public static <T> T deserialize(byte[] source, int length) {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(source, 0, length);
              ObjectInputStream is = new ObjectInputStream(bais)
         ) {
             return (T) is.readObject();
         }
+    }
+
+    public static <T> T deserialize(byte[] source) {
+        return deserialize(source, source.length);
     }
 }
