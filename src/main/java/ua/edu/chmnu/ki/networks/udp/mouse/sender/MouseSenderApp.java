@@ -19,7 +19,7 @@ public class MouseSenderApp {
         String connectionUrl;
 
         if (args == null || args.length == 0) {
-            connectionUrl = new ConsoleReader().read(Function.identity());
+            connectionUrl = new ConsoleReader("Type target end-point <host:port>:").read(Function.identity());
         } else {
             connectionUrl = args[0];
         }
