@@ -52,9 +52,12 @@ public class MouseCaptureOperator {
                 boolean isDown = false;
 
                 while (!isDown) {
-                    String line = scanner.nextLine();
+                    if (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
 
-                    isDown = Stream.of("Q", "q", "Quit", "By", "Exit").anyMatch(s -> s.equalsIgnoreCase(line));
+                        isDown = Stream.of("Q", "q", "Quit", "By", "Exit").anyMatch(s -> s.equalsIgnoreCase(line));
+                    }
+                    Thread.sleep(100);
                 }
             }
         }

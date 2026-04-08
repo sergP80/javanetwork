@@ -46,13 +46,25 @@ public class BasicSender<T> implements Runnable {
         while (isActive && !datagramSocket.isClosed()) {
             T data = supplier.get();
 
+            if (data == null) {
+                Thread.sleep(100);
+                continue;
+            }
+
             byte[] bytes = ObjectConverter.convertToByte(data);
 
             InetAddress inetAddress = InetAddress.getByName(host);
 
             DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length, inetAddress, port);
 
+            System.out.println("Transfer data: " + data);
+
+            System.out.println("Active: " + isActive);
+            System.out.println("Socket closed is: " + datagramSocket.isClosed());
+
             datagramSocket.send(datagramPacket);
+
+            Thread.sleep(100);
         }
     }
 }
