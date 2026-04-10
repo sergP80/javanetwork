@@ -34,7 +34,7 @@ public class SenderApp<T> {
 
     public void runApp(String[] args) {
 
-        long delayMs = Long.parseLong(System.getProperty("udp.sender.delay.ms", "" + DEFAULT_DELAY_SEND));
+        long delayMs = Long.parseLong(System.getenv().getOrDefault("UDP_SEND_DELAY", "" + DEFAULT_DELAY_SEND));
 
         var worker = new SenderWorker<>(running, delayMs, outgoingMessageProvider, messageSender);
 
