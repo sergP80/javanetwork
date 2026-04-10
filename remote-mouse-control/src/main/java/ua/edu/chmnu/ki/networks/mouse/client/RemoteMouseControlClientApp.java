@@ -1,5 +1,6 @@
-package ua.edu.chmnu.ki.networks.mouse.sender;
+package ua.edu.chmnu.ki.networks.mouse.client;
 
+import org.apache.commons.lang3.StringUtils;
 import ua.edu.chmnu.ki.networks.utils.ConsoleReader;
 import ua.edu.chmnu.ki.networks.utils.DesktopBoundsUtils;
 import ua.edu.chmnu.ki.networks.mouse.model.MousePositionEvent;
@@ -12,16 +13,18 @@ import java.util.Optional;
 import java.util.function.Function;
 
 
-public class MouseSenderApp {
+public class RemoteMouseControlClientApp {
     public static void main(String[] args) throws Exception {
 
-        String connectionUrl;
+        String connectionUrl = System.getenv().getOrDefault("REMOTE_URL", "");
 
-        if (args == null || args.length == 0) {
-            connectionUrl = Optional.ofNullable(new ConsoleReader("Type target end-point <host:port>:").read(Function.identity()))
-                    .orElseThrow(() -> new IllegalArgumentException("Connection string is not present"));
-        } else {
-            connectionUrl = args[0];
+        if (StringUtils.isBlank(connectionUrl)) {
+            if (args == null || args.length == 0) {
+                connectionUrl = Optional.ofNullable(new ConsoleReader("Type target end-point <host:port>:").read(Function.identity()))
+                        .orElseThrow(() -> new IllegalArgumentException("Connection string is not present"));
+            } else {
+                connectionUrl = args[0];
+            }
         }
 
         Rectangle virtualBounds = DesktopBoundsUtils.getVirtualBounds();

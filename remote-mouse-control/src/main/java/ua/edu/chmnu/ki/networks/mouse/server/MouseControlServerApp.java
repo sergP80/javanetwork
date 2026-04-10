@@ -1,4 +1,4 @@
-package ua.edu.chmnu.ki.networks.mouse.receiver;
+package ua.edu.chmnu.ki.networks.mouse.server;
 
 import ua.edu.chmnu.ki.networks.utils.ConsoleReader;
 import ua.edu.chmnu.ki.networks.utils.DesktopBoundsUtils;
@@ -10,19 +10,21 @@ import ua.edu.chmnu.ki.networks.mouse.handler.MousePositionEventHandler;
 import java.awt.*;
 import java.util.Optional;
 
-public class MouseReceiverApp {
+public class MouseControlServerApp {
 
     private static final int DEFAULT_PORT = 5789;
 
     public static void main(String[] args) throws Exception {
-        int port;
+        int port = Integer.parseInt(System.getenv().getOrDefault("CONTROL_PORT", "-1"));
 
-        if (args.length > 0) {
-            port = Integer.parseInt(args[0]);
-        } else {
-            Integer result = new ConsoleReader("Enter port (press Enter to use default):").read(Integer::parseInt);
+        if (port < 0) {
+            if (args.length > 0) {
+                port = Integer.parseInt(args[0]);
+            } else {
+                Integer result = new ConsoleReader("Enter port (press Enter to use default):").read(Integer::parseInt);
 
-            port = Optional.ofNullable(result).orElse(DEFAULT_PORT);
+                port = Optional.ofNullable(result).orElse(DEFAULT_PORT);
+            }
         }
 
         Rectangle virtualBounds = DesktopBoundsUtils.getVirtualBounds();

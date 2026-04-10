@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class MouseRobot {
+public class MouseRobotDemoApp {
 
     public static void main(String[] args) {
         try(Scanner in = new Scanner(System.in)) {

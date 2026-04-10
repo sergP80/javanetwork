@@ -225,7 +225,7 @@
         <module>text-chat</module>
         <module>tutorial</module>
         <module>udp-core</module>
-        <module>mouse-control</module>
+        <module>remote-mouse-control</module>
         <module>remote-screen-viewer</module>
     </modules>
 </project>
