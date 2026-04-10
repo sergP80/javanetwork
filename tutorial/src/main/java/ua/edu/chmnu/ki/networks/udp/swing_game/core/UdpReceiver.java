@@ -52,12 +52,10 @@ public class UdpReceiver implements Runnable {
                     Object data = is.readObject();
                     if (data instanceof Gamer) {
                         gamerPool.add((Gamer)data);
-                    } else if (data instanceof GamerLocation) {
-                        GamerLocation location = (GamerLocation)data;
-                        gamerPool.updateLocation(location.getGamerId(), location.getPosition());
-                    } else if (data instanceof GamerLeave) {
-                        GamerLeave leave = (GamerLeave) data;
-                        gamerPool.remove(leave.getGamerId());
+                    } else if (data instanceof GamerLocation location) {
+                        gamerPool.updateLocation(location.gamerId(), location.position());
+                    } else if (data instanceof GamerLeave leave) {
+                        gamerPool.remove(leave.gamerId());
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();

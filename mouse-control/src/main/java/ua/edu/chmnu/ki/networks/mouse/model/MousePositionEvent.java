@@ -1,6 +1,6 @@
 package ua.edu.chmnu.ki.networks.mouse.model;
 
-import ua.edu.chmnu.ki.networks.common.DesktopBoundsUtils;
+import ua.edu.chmnu.ki.networks.utils.DesktopBoundsUtils;
 
 import java.awt.*;
 import java.io.Serializable;
