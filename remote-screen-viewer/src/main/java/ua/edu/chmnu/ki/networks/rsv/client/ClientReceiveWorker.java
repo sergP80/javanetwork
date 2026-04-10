@@ -16,15 +16,17 @@ public class ClientReceiveWorker implements Runnable {
     private final FrameAssembler assembler;
     private final BlockingQueue<BufferedImage> frameQueue;
     private final int packetSize;
+    private final ConnectionMonitor connectionMonitor;
 
     public ClientReceiveWorker(UdpTransport transport,
                                FrameAssembler assembler,
                                BlockingQueue<BufferedImage> frameQueue,
-                               int packetSize) {
+                               int packetSize, ConnectionMonitor connectionMonitor) {
         this.transport = transport;
         this.assembler = assembler;
         this.frameQueue = frameQueue;
         this.packetSize = packetSize;
+        this.connectionMonitor = connectionMonitor;
     }
 
     @Override
@@ -35,6 +37,12 @@ public class ClientReceiveWorker implements Runnable {
                 ByteBuffer buffer = ByteBuffer.wrap(packet.getData(), 0, packet.getLength());
 
                 byte packetType = buffer.get();
+
+                if (packetType == PacketType.HEARTBEAT) {
+                    connectionMonitor.onHeartbeat();
+                    continue;
+                }
+
                 if (packetType != PacketType.FRAME_CHUNK) {
                     continue;
                 }
@@ -59,6 +67,7 @@ public class ClientReceiveWorker implements Runnable {
                 if (frameBytes != null) {
                     BufferedImage image = ImageIO.read(new ByteArrayInputStream(frameBytes));
                     if (image != null) {
+                        connectionMonitor.onFrameReceived();
                         frameQueue.offer(image);
                     }
                 }

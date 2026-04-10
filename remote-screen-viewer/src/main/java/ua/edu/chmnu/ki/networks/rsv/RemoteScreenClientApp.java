@@ -1,6 +1,7 @@
-package ua.edu.chmnu.ki.networks.rsv.client;
+package ua.edu.chmnu.ki.networks.rsv;
 
-import ua.edu.chmnu.ki.networks.rsv.AppConfig;
+import ua.edu.chmnu.ki.networks.rsv.client.ScreenClient;
+import ua.edu.chmnu.ki.networks.rsv.client.ScreenClientImpl;
 
 public class RemoteScreenClientApp {
 

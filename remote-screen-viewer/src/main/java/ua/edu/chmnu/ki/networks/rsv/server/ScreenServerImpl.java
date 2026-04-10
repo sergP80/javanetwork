@@ -47,6 +47,8 @@ public class ScreenServerImpl implements ScreenServer {
                 config.packetSize()
         ));
 
+        executor.submit(new HeartbeatWorker(transport, clientRegistry, config.heartBeatInterval()));
+
         System.out.println("UDP screen server started on " + config.host() + ":" + config.port());
         System.out.println("Press Ctrl+C to stop.");
 

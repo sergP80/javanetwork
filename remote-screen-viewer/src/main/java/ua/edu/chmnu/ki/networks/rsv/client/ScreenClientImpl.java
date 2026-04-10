@@ -6,13 +6,14 @@ import ua.edu.chmnu.ki.networks.rsv.protocol.PacketType;
 import ua.edu.chmnu.ki.networks.rsv.transport.DatagramUdpTransport;
 import ua.edu.chmnu.ki.networks.rsv.transport.UdpTransport;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ScreenClientImpl implements ScreenClient {
@@ -23,14 +24,16 @@ public class ScreenClientImpl implements ScreenClient {
     private final BlockingQueue<BufferedImage> frameQueue;
     private final FrameAssembler assembler;
     private final ClientWindow window;
+    private final ConnectionMonitor connectionMonitor;
 
     public ScreenClientImpl(AppConfig config) {
         this.config = config;
         this.transport = new DatagramUdpTransport();
-        this.executor = Executors.newFixedThreadPool(2);
+        this.executor = Executors.newFixedThreadPool(3);
         this.frameQueue = new LinkedBlockingQueue<>(3);
         this.assembler = new FrameAssembler();
         this.window = new ClientWindow();
+        this.connectionMonitor = new HeartbeatConnectionMonitor(5000);
     }
 
     @Override
@@ -45,7 +48,8 @@ public class ScreenClientImpl implements ScreenClient {
                 transport,
                 assembler,
                 frameQueue,
-                config.packetSize()
+                config.packetSize(),
+                connectionMonitor
         ));
 
         executor.submit(() -> {
@@ -59,6 +63,12 @@ public class ScreenClientImpl implements ScreenClient {
             }
         });
 
+        executor.submit(new ClientConnectionWatchdogWorker(
+                connectionMonitor,
+                this::shutdownClient,
+                1000
+        ));
+
         Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
     }
 
@@ -69,6 +79,18 @@ public class ScreenClientImpl implements ScreenClient {
         hello[0] = PacketType.HELLO;
         System.arraycopy(nameBytes, 0, hello, 1, nameBytes.length);
         transport.send(hello, serverAddress);
+    }
+
+    private void shutdownClient() {
+        System.out.println("Server is unavailable. Closing client...");
+        stop();
+
+        SwingUtilities.invokeLater(() -> {
+            for (Window openedWindow : Window.getWindows()) {
+                openedWindow.dispose();
+            }
+            System.exit(0);
+        });
     }
 
     @Override
