@@ -13,7 +13,7 @@ public class SocketMessageSender implements MessageSender{
 
     @Override
     public void send(ChatMessage message) {
-        writer.println(MessageCodec.encode(message));
+        writer.println(MessageCodec.serialize(message));
         writer.flush();
     }
 }

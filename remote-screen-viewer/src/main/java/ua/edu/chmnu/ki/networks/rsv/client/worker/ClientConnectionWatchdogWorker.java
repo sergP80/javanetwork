@@ -1,16 +1,19 @@
-package ua.edu.chmnu.ki.networks.rsv.client;
+package ua.edu.chmnu.ki.networks.rsv.client.worker;
+
+import ua.edu.chmnu.ki.networks.rsv.client.gui.ClientWindow;
+import ua.edu.chmnu.ki.networks.rsv.client.monitor.ConnectionMonitor;
 
 public class ClientConnectionWatchdogWorker implements Runnable {
 
     private final ConnectionMonitor connectionMonitor;
-    private final Runnable disconnectAction;
+    private final ClientWindow clientWindow;
     private final long checkIntervalMillis;
 
     public ClientConnectionWatchdogWorker(ConnectionMonitor connectionMonitor,
-                                          Runnable disconnectAction,
+                                          ClientWindow clientWindow,
                                           long checkIntervalMillis) {
         this.connectionMonitor = connectionMonitor;
-        this.disconnectAction = disconnectAction;
+        this.clientWindow = clientWindow;
         this.checkIntervalMillis = checkIntervalMillis;
     }
 
@@ -18,10 +21,9 @@ public class ClientConnectionWatchdogWorker implements Runnable {
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                if (!connectionMonitor.isAlive()) {
-                    disconnectAction.run();
-                    return;
-                }
+                boolean isAlive = connectionMonitor.isAlive();
+
+                clientWindow.updateHeartbeatStatus(isAlive);
 
                 Thread.sleep(checkIntervalMillis);
             } catch (InterruptedException e) {

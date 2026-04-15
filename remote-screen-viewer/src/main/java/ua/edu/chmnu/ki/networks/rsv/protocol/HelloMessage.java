@@ -1,4 +1,0 @@
-package ua.edu.chmnu.ki.networks.rsv.protocol;
-
-public record HelloMessage(String clientName) {
-}

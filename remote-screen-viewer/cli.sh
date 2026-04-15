@@ -21,7 +21,7 @@ function client() {
       export HEART_BEAT_TIMEOUT=$HEART_BEAT_TIMEOUT
     fi
 
-    java -cp ./target/remote-screen-viewer-1.0-SNAPSHOT.jar ua.edu.chmnu.ki.networks.rsv.RemoteScreenClientApp
+    java -cp ./target/remote-screen-viewer-1.0-SNAPSHOT-jar-with-dependencies.jar ua.edu.chmnu.ki.networks.rsv.RemoteScreenClientApp
 }
 
 function server() {
@@ -39,7 +39,7 @@ function server() {
       export HEART_BEAT_INTERVAL=$HEART_BEAT_FREQ
     fi
 
-    java -cp ./target/remote-screen-viewer-1.0-SNAPSHOT.jar ua.edu.chmnu.ki.networks.rsv.RemoteScreenServerApp
+    java -cp ./target/remote-screen-viewer-1.0-SNAPSHOT-jar-with-dependencies.jar ua.edu.chmnu.ki.networks.rsv.RemoteScreenServerApp
 }
 
 "$@"

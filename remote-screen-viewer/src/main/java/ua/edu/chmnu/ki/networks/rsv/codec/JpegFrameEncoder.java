@@ -1,5 +1,7 @@
 package ua.edu.chmnu.ki.networks.rsv.codec;
 
+import lombok.AllArgsConstructor;
+
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
@@ -10,9 +12,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class JpegFrameEncoder {
+@AllArgsConstructor
+public class JpegFrameEncoder implements FrameEncoder {
 
-    public byte[] encode(BufferedImage image, float quality) throws IOException {
+    private final float quality;
+
+    @Override
+    public byte[] encode(BufferedImage image) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
