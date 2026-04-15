@@ -1,10 +1,9 @@
 package ua.edu.chmnu.ki.networks.rsv.deserializer.impl;
 
 import lombok.AllArgsConstructor;
+import ua.edu.chmnu.ki.networks.rsv.deserializer.PacketDeserializer;
 import ua.edu.chmnu.ki.networks.rsv.protocol.ClientHello;
 import ua.edu.chmnu.ki.networks.rsv.protocol.PacketFrame;
-import ua.edu.chmnu.ki.networks.rsv.protocol.PacketType;
-import ua.edu.chmnu.ki.networks.rsv.deserializer.PacketDeserializer;
 
 import java.net.DatagramPacket;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +22,6 @@ public class ClientHelloPacketDeserializer implements PacketDeserializer {
 
         String message = new String(source, 1, length - 1, StandardCharsets.UTF_8);
 
-        return new ClientHello(PacketType.HELLO, message);
+        return new ClientHello(message);
     }
 }

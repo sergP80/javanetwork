@@ -44,7 +44,7 @@ public class FrameChunkPacketDeserializer implements PacketDeserializer {
 
             dis.read(payload, 0, payloadLength);
 
-            return new FrameChunk(PacketType.FRAME_CHUNK, header, payload);
+            return new FrameChunk(header, payload);
 
         }
     }

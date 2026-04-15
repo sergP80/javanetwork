@@ -43,7 +43,7 @@ public class HeartBeatPacketDeserializer implements PacketDeserializer {
 
             LocalDateTime timeStamp = LocalDateTime.of(year, month, day, hour, minute, second, nano);
 
-            return new HeartBeat(PacketType.HEARTBEAT, timeStamp);
+            return new HeartBeat(timeStamp);
 
         }
     }

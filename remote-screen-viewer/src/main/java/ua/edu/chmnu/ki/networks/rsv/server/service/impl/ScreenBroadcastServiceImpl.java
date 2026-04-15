@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import ua.edu.chmnu.ki.networks.rsv.codec.FrameEncoder;
 import ua.edu.chmnu.ki.networks.rsv.protocol.FrameChunk;
 import ua.edu.chmnu.ki.networks.rsv.protocol.FrameChunkHeader;
-import ua.edu.chmnu.ki.networks.rsv.protocol.PacketType;
 import ua.edu.chmnu.ki.networks.rsv.serializer.PacketSerializeFactory;
 import ua.edu.chmnu.ki.networks.rsv.serializer.PacketSerializer;
 import ua.edu.chmnu.ki.networks.rsv.server.service.ClientBroadcastService;
@@ -75,7 +74,6 @@ public class ScreenBroadcastServiceImpl implements ScreenBroadcastService {
                 offset);
 
         return new FrameChunk(
-                PacketType.FRAME_CHUNK,
                 header,
                 source
         );
