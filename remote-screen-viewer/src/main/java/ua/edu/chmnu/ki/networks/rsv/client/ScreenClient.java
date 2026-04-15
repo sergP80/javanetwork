@@ -77,7 +77,7 @@ public class ScreenClient implements AppRunner {
         String clientName = "swing-client";
         byte[] nameBytes = clientName.getBytes(StandardCharsets.UTF_8);
         byte[] hello = new byte[1 + nameBytes.length];
-        hello[0] = PacketType.HELLO;
+        hello[0] = PacketType.HELLO.getType();
         System.arraycopy(nameBytes, 0, hello, 1, nameBytes.length);
         transport.send(hello, serverAddress);
     }

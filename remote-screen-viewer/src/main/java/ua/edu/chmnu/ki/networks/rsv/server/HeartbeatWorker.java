@@ -13,7 +13,7 @@ public class HeartbeatWorker implements Runnable {
 
     @Override
     public void run() {
-        byte[] heartbeat = new byte[]{PacketType.HEARTBEAT};
+        byte[] heartbeat = new byte[]{PacketType.HEARTBEAT.getType()};
 
         while (!Thread.currentThread().isInterrupted()) {
             try {

@@ -36,7 +36,7 @@ public class ClientReceiveWorker implements Runnable {
                 DatagramPacket packet = transport.receive(packetSize);
                 ByteBuffer buffer = ByteBuffer.wrap(packet.getData(), 0, packet.getLength());
 
-                byte packetType = buffer.get();
+                PacketType packetType = PacketType.of(buffer.get());
 
                 if (packetType == PacketType.HEARTBEAT) {
                     connectionMonitor.onHeartbeat();

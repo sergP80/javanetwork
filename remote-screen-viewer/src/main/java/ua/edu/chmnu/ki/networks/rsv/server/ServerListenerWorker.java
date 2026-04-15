@@ -29,7 +29,7 @@ public class ServerListenerWorker implements Runnable {
                 }
 
                 byte type = data[0];
-                if (type == PacketType.HELLO) {
+                if (type == PacketType.HELLO.getType()) {
                     String clientName = new String(data, 1, length - 1, StandardCharsets.UTF_8);
                     InetSocketAddress address = new InetSocketAddress(packet.getAddress(), packet.getPort());
                     clientRegistry.register(address);

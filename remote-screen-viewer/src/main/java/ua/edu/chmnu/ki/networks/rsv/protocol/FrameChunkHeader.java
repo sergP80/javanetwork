@@ -5,6 +5,7 @@ public record FrameChunkHeader(
         int totalChunks,
         int chunkIndex,
         int totalBytes,
-        int payloadLength
+        int payloadLength,
+        int offset
 ) {
 }

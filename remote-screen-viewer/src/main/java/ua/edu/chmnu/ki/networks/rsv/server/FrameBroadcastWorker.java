@@ -85,7 +85,7 @@ public class FrameBroadcastWorker implements Runnable {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(HEADER_SIZE + length);
         DataOutputStream dos = new DataOutputStream(baos);
 
-        dos.writeByte(PacketType.FRAME_CHUNK);
+        dos.writeByte(PacketType.FRAME_CHUNK.getType());
         dos.writeInt(frameId);
         dos.writeInt(totalChunks);
         dos.writeInt(chunkIndex);

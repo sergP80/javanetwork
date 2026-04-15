@@ -1,11 +1,24 @@
 package ua.edu.chmnu.ki.networks.rsv.protocol;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class PacketType {
-    public static final byte HELLO = 1;
-    public static final byte FRAME_CHUNK = 2;
-    public static final byte HEARTBEAT = 3;
+import java.util.Arrays;
+
+@Getter
+@AllArgsConstructor
+public enum PacketType {
+    UNKNOWN((byte) 0),
+    HELLO((byte) 1),
+    FRAME_CHUNK((byte) 2),
+    HEARTBEAT((byte) 3);
+
+    private final byte type;
+
+    public static PacketType of(byte type) {
+        return Arrays.stream(values())
+                .filter(v -> v.getType() == type)
+                .findFirst()
+                .orElse(UNKNOWN);
+    }
 }
