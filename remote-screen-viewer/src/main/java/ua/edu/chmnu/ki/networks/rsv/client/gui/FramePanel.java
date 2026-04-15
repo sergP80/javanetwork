@@ -1,4 +1,4 @@
-package ua.edu.chmnu.ki.networks.rsv.client;
+package ua.edu.chmnu.ki.networks.rsv.client.gui;
 
 import javax.swing.JPanel;
 import java.awt.Dimension;

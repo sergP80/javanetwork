@@ -1,4 +1,4 @@
-package ua.edu.chmnu.ki.networks.rsv.client;
+package ua.edu.chmnu.ki.networks.rsv.client.monitor;
 
 public interface ConnectionMonitor {
     void onHeartbeat();

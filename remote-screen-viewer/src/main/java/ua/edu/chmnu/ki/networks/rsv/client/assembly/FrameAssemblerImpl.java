@@ -1,36 +1,41 @@
-package ua.edu.chmnu.ki.networks.rsv.client;
+package ua.edu.chmnu.ki.networks.rsv.client.assembly;
+
+import ua.edu.chmnu.ki.networks.rsv.protocol.FrameChunk;
+import ua.edu.chmnu.ki.networks.rsv.protocol.FrameChunkHeader;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class FrameAssembler {
+public class FrameAssemblerImpl implements FrameAssembler {
 
     private final Map<Integer, PartialFrame> frames = new ConcurrentHashMap<>();
 
-    public byte[] accept(int frameId,
-                         int totalChunks,
-                         int chunkIndex,
-                         int totalBytes,
-                         byte[] payload) {
+    @Override
+    public byte[] accept(FrameChunk chunk) {
+        FrameChunkHeader header = chunk.header();
+
         PartialFrame frame = frames.computeIfAbsent(
-                frameId,
-                id -> new PartialFrame(totalChunks, totalBytes)
+                header.frameId(),
+                id -> new PartialFrame(header.totalChunks(), header.totalBytes())
         );
 
-        frame.put(chunkIndex, payload);
+        frame.put(header.chunkIndex(), chunk.payload());
 
         if (frame.isComplete()) {
-            frames.remove(frameId);
+            frames.remove(header.frameId());
             return frame.join();
         }
 
-        cleanupOldFrames(frameId);
+        cleanupOldFrames(header.frameId());
+
         return null;
     }
 
     private void cleanupOldFrames(int latestFrameId) {
         frames.keySet().removeIf(id -> id < latestFrameId - 10);
     }
+
+
 
     private static class PartialFrame {
         private final byte[][] chunks;

@@ -2,16 +2,27 @@ package ua.edu.chmnu.ki.networks.rsv.client;
 
 
 import ua.edu.chmnu.ki.networks.rsv.AppConfig;
+import ua.edu.chmnu.ki.networks.rsv.client.assembly.FrameAssembler;
+import ua.edu.chmnu.ki.networks.rsv.client.assembly.FrameAssemblerImpl;
+import ua.edu.chmnu.ki.networks.rsv.client.gui.ClientWindow;
+import ua.edu.chmnu.ki.networks.rsv.client.monitor.ConnectionMonitor;
+import ua.edu.chmnu.ki.networks.rsv.client.monitor.HeartbeatConnectionMonitor;
+import ua.edu.chmnu.ki.networks.rsv.client.service.ClientScreenAssemblyService;
+import ua.edu.chmnu.ki.networks.rsv.client.service.HelloService;
+import ua.edu.chmnu.ki.networks.rsv.client.service.impl.ClientScreenAssemblyServiceImpl;
+import ua.edu.chmnu.ki.networks.rsv.client.service.impl.HelloServiceImpl;
+import ua.edu.chmnu.ki.networks.rsv.client.worker.ClientConnectionWatchdogWorker;
+import ua.edu.chmnu.ki.networks.rsv.client.worker.ClientReceiveWorker;
 import ua.edu.chmnu.ki.networks.rsv.common.AppRunner;
-import ua.edu.chmnu.ki.networks.rsv.protocol.PacketType;
+import ua.edu.chmnu.ki.networks.rsv.deserializer.PacketDeserializeFactoryImpl;
+import ua.edu.chmnu.ki.networks.rsv.serializer.PacketSerializeFactoryImpl;
 import ua.edu.chmnu.ki.networks.rsv.transport.DatagramUdpTransport;
 import ua.edu.chmnu.ki.networks.rsv.transport.UdpTransport;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,31 +37,40 @@ public class ScreenClient implements AppRunner {
     private final FrameAssembler assembler;
     private final ClientWindow window;
     private final ConnectionMonitor connectionMonitor;
+    private final HelloService helloService;
 
     public ScreenClient(AppConfig config) {
         this.config = config;
         this.transport = new DatagramUdpTransport();
         this.executor = Executors.newFixedThreadPool(4);
         this.frameQueue = new LinkedBlockingQueue<>(3);
-        this.assembler = new FrameAssembler();
-        this.window = new ClientWindow();
+        this.assembler = new FrameAssemblerImpl();
+        this.window = new ClientWindow(this);
         this.connectionMonitor = new HeartbeatConnectionMonitor(5000);
+        this.helloService = new HelloServiceImpl(transport, new PacketSerializeFactoryImpl());
     }
 
     @Override
     public void start() throws Exception {
         transport.bind(new InetSocketAddress(0));
-        window.show();
 
         InetSocketAddress serverAddress = new InetSocketAddress(config.host(), config.port());
-        sendHello(serverAddress);
+
+        if (!helloService.sendTo(serverAddress)) {
+            return;
+        }
+
+        window.show();
+
+        ClientScreenAssemblyService clientScreenAssemblyService = new ClientScreenAssemblyServiceImpl(assembler);
 
         executor.submit(new ClientReceiveWorker(
+                clientScreenAssemblyService,
+                new PacketDeserializeFactoryImpl(),
                 transport,
-                assembler,
                 frameQueue,
-                config.packetSize(),
-                connectionMonitor
+                connectionMonitor,
+                config.packetSize()
         ));
 
         executor.submit(() -> {
@@ -66,32 +86,11 @@ public class ScreenClient implements AppRunner {
 
         executor.submit(new ClientConnectionWatchdogWorker(
                 connectionMonitor,
-                this::shutdownClient,
+                window,
                 1000
         ));
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
-    }
-
-    private void sendHello(InetSocketAddress serverAddress) throws Exception {
-        String clientName = "swing-client";
-        byte[] nameBytes = clientName.getBytes(StandardCharsets.UTF_8);
-        byte[] hello = new byte[1 + nameBytes.length];
-        hello[0] = PacketType.HELLO.getType();
-        System.arraycopy(nameBytes, 0, hello, 1, nameBytes.length);
-        transport.send(hello, serverAddress);
-    }
-
-    private void shutdownClient() {
-        System.out.println("Server is unavailable. Closing client...");
-        stop();
-
-        SwingUtilities.invokeLater(() -> {
-            for (Window openedWindow : Window.getWindows()) {
-                openedWindow.dispose();
-            }
-            System.exit(0);
-        });
     }
 
     @Override
@@ -101,5 +100,12 @@ public class ScreenClient implements AppRunner {
             transport.close();
         } catch (Exception ignored) {
         }
+    }
+
+    @Override
+    public void restart() throws IOException {
+        InetSocketAddress serverAddress = new InetSocketAddress(config.host(), config.port());
+
+        helloService.sendTo(serverAddress);
     }
 }
