@@ -3,6 +3,7 @@ package ua.edu.chmnu.ki.networks.rsv.server;
 
 import lombok.AllArgsConstructor;
 import ua.edu.chmnu.ki.networks.rsv.protocol.PacketType;
+import ua.edu.chmnu.ki.networks.rsv.server.service.ClientRegistryService;
 import ua.edu.chmnu.ki.networks.rsv.transport.UdpTransport;
 
 import java.net.DatagramPacket;
@@ -13,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 public class ServerListenerWorker implements Runnable {
 
     private final UdpTransport transport;
-    private final ClientRegistry clientRegistry;
+    private final ClientRegistryService clientRegistryService;
     private final int packetSize;
 
     @Override
@@ -32,7 +33,7 @@ public class ServerListenerWorker implements Runnable {
                 if (type == PacketType.HELLO.getType()) {
                     String clientName = new String(data, 1, length - 1, StandardCharsets.UTF_8);
                     InetSocketAddress address = new InetSocketAddress(packet.getAddress(), packet.getPort());
-                    clientRegistry.register(address);
+                    clientRegistryService.register(address);
                     System.out.println("Registered client: " + clientName + " at " + address);
                 }
             } catch (Exception e) {

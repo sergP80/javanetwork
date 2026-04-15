@@ -1,9 +1,9 @@
-package ua.edu.chmnu.ki.networks.rsv.server;
+package ua.edu.chmnu.ki.networks.rsv.server.service;
 
 import java.net.InetSocketAddress;
 import java.util.Set;
 
-public interface ClientRegistry {
+public interface ClientRegistryService {
 
     void register(InetSocketAddress address);
 

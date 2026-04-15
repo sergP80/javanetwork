@@ -2,30 +2,15 @@ package ua.edu.chmnu.ki.networks.rsv.server;
 
 
 import lombok.AllArgsConstructor;
-import ua.edu.chmnu.ki.networks.rsv.codec.FrameEncoder;
-import ua.edu.chmnu.ki.networks.rsv.protocol.PacketType;
-import ua.edu.chmnu.ki.networks.rsv.transport.UdpTransport;
-
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.net.InetSocketAddress;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
+import ua.edu.chmnu.ki.networks.rsv.server.service.ClientRegistryService;
+import ua.edu.chmnu.ki.networks.rsv.server.service.ScreenBroadcastService;
 
 @AllArgsConstructor
 public class FrameBroadcastWorker implements Runnable {
 
-    private static final int HEADER_SIZE = 1 + 4 + 4 + 4 + 4 + 4;
-
-    private final UdpTransport transport;
-    private final ClientRegistry clientRegistry;
-    private final ScreenCaptureService captureService;
-    private final FrameEncoder encoder;
+    private final ClientRegistryService clientRegistryService;
+    private final ScreenBroadcastService screenBroadcastService;
     private final int fps;
-    private final float jpegQuality;
-    private final int packetSize;
-    private final AtomicInteger frameCounter = new AtomicInteger();
 
     @Override
     public void run() {
@@ -33,38 +18,12 @@ public class FrameBroadcastWorker implements Runnable {
 
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                if (clientRegistry.isEmpty()) {
+                if (clientRegistryService.isEmpty()) {
                     Thread.sleep(500);
                     continue;
                 }
 
-                BufferedImage image = captureService.capture();
-                byte[] encoded = encoder.encode(image, jpegQuality);
-
-                int maxPayload = packetSize - HEADER_SIZE;
-                int totalChunks = (int) Math.ceil((double) encoded.length / maxPayload);
-                int frameId = frameCounter.incrementAndGet();
-
-                Set<InetSocketAddress> clients = clientRegistry.getClients();
-
-                for (int chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-                    int start = chunkIndex * maxPayload;
-                    int len = Math.min(maxPayload, encoded.length - start);
-
-                    byte[] packetBytes = createFrameChunkPacket(
-                            frameId,
-                            totalChunks,
-                            chunkIndex,
-                            encoded.length,
-                            encoded,
-                            start,
-                            len
-                    );
-
-                    for (InetSocketAddress client : clients) {
-                        transport.send(packetBytes, client);
-                    }
-                }
+                screenBroadcastService.captureAndSend();
 
                 Thread.sleep(delayMs);
             } catch (Exception e) {
@@ -73,27 +32,5 @@ public class FrameBroadcastWorker implements Runnable {
                 }
             }
         }
-    }
-
-    private byte[] createFrameChunkPacket(int frameId,
-                                          int totalChunks,
-                                          int chunkIndex,
-                                          int totalBytes,
-                                          byte[] source,
-                                          int offset,
-                                          int length) throws Exception {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(HEADER_SIZE + length);
-        DataOutputStream dos = new DataOutputStream(baos);
-
-        dos.writeByte(PacketType.FRAME_CHUNK.getType());
-        dos.writeInt(frameId);
-        dos.writeInt(totalChunks);
-        dos.writeInt(chunkIndex);
-        dos.writeInt(totalBytes);
-        dos.writeInt(length);
-        dos.write(source, offset, length);
-        dos.flush();
-
-        return baos.toByteArray();
     }
 }

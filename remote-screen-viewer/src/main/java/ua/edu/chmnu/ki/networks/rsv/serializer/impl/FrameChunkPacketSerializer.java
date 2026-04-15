@@ -10,7 +10,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class FrameChunkPacketSerializer extends AbstractPacketSerializer implements PacketSerializer {
-    private static final int HEADER_SIZE = 1 + 4 + 4 + 4 + 4 + 4;
 
     public FrameChunkPacketSerializer(PacketFrame source) {
         super(source);

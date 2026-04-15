@@ -5,5 +5,5 @@ import java.io.IOException;
 
 public interface FrameEncoder {
 
-    byte[] encode(BufferedImage image, float quality) throws IOException;
+    byte[] encode(BufferedImage image) throws IOException;
 }

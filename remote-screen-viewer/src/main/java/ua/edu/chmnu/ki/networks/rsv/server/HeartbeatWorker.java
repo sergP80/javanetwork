@@ -2,13 +2,14 @@ package ua.edu.chmnu.ki.networks.rsv.server;
 
 import lombok.AllArgsConstructor;
 import ua.edu.chmnu.ki.networks.rsv.protocol.PacketType;
+import ua.edu.chmnu.ki.networks.rsv.server.service.ClientRegistryService;
 import ua.edu.chmnu.ki.networks.rsv.transport.UdpTransport;
 
 @AllArgsConstructor
 public class HeartbeatWorker implements Runnable {
 
     private final UdpTransport transport;
-    private final ClientRegistry clientRegistry;
+    private final ClientRegistryService clientRegistryService;
     private final long intervalMillis;
 
     @Override
@@ -17,7 +18,7 @@ public class HeartbeatWorker implements Runnable {
 
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                for (var client : clientRegistry.getClients()) {
+                for (var client : clientRegistryService.getClients()) {
                     transport.send(heartbeat, client);
                 }
 
