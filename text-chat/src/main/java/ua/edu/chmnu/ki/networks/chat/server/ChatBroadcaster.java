@@ -13,6 +13,7 @@ public class ChatBroadcaster {
         for (ChatClientSession session : clientRegistry.all()) {
             session.send(message);
         }
+
     }
 
     public void broadcastExcept(String excludedUsername, ChatMessage message) {
@@ -21,5 +22,14 @@ public class ChatBroadcaster {
                 session.send(message);
             }
         }
+    }
+
+    public boolean sendPrivate(String recipientUserName, ChatMessage message) {
+        ChatClientSession session = clientRegistry.get(recipientUserName);
+        if (session != null) {
+            session.send(message);
+            return true;
+        }
+        return false;
     }
 }

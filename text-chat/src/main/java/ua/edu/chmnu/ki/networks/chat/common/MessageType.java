@@ -4,5 +4,6 @@ public enum MessageType {
     TEXT,
     PICTURE,
     TEXT_AND_PICTURE,
-    SYSTEM
+    SYSTEM,
+    PRIVATE
 }

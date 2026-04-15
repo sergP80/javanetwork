@@ -48,6 +48,9 @@ public class ServerMessageListener implements Runnable {
                 System.out.println("[" + safe(message.from()) + "] "
                         + safe(message.text()) + " | picture: " + safe(message.pictureUrl()));
                 break;
+            case PRIVATE:
+                System.out.println("[PM from " + safe(message.from()) + "] " + safe(message.text()));
+                break;
             default:
                 System.out.println("[UNKNOWN MESSAGE]");
         }

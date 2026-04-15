@@ -10,19 +10,22 @@ public final class MessageCodec {
     public static String serialize(ChatMessage message) {
         return escape(message.type().name()) + SEPARATOR
                 + escape(nullToEmpty(message.from())) + SEPARATOR
+                + escape(nullToEmpty(message.to())) + SEPARATOR
+                + escape(nullToEmpty(message.to())) + SEPARATOR
                 + escape(nullToEmpty(message.text())) + SEPARATOR
                 + escape(nullToEmpty(message.pictureUrl()));
     }
 
     public static ChatMessage deserialize(String raw) {
-        String[] parts = splitEscaped(raw, 4);
+        String[] parts = splitEscaped(raw, 5);
 
         MessageType type = MessageType.valueOf(unescape(parts[0]));
         String from = emptyToNull(unescape(parts[1]));
-        String text = emptyToNull(unescape(parts[2]));
-        String pictureUrl = emptyToNull(unescape(parts[3]));
+        String to = emptyToNull(unescape(parts[2]));
+        String text = emptyToNull(unescape(parts[3]));
+        String pictureUrl = emptyToNull(unescape(parts[4]));
 
-        return new ChatMessage(type, from, text, pictureUrl);
+        return new ChatMessage(type, from, to, text, pictureUrl);
     }
 
     private static String[] splitEscaped(String value, int expectedParts) {
