@@ -32,7 +32,7 @@ public class ScreenServer implements AppRunner {
 
     public ScreenServer(AppConfig config) {
         this.config = config;
-        this.executor = Executors.newFixedThreadPool(3);
+        this.executor = Executors.newFixedThreadPool(4);
         this.transport = new DatagramUdpTransport();
         this.clientRegistryService = new ClientRegistryServiceImpl();
         this.frameEncoderFactory = new FrameEncoderFactoryImpl();

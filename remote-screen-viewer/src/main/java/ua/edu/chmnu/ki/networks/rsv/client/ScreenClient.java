@@ -30,7 +30,7 @@ public class ScreenClient implements AppRunner {
     public ScreenClient(AppConfig config) {
         this.config = config;
         this.transport = new DatagramUdpTransport();
-        this.executor = Executors.newFixedThreadPool(3);
+        this.executor = Executors.newFixedThreadPool(4);
         this.frameQueue = new LinkedBlockingQueue<>(3);
         this.assembler = new FrameAssembler();
         this.window = new ClientWindow();
