@@ -43,7 +43,7 @@ public class ClientConsoleReader implements Runnable {
                 continue;
             }
 
-            writer.println(MessageCodec.encode(message));
+            writer.println(MessageCodec.serialize(message));
             writer.flush();
 
             if (QUIT_COMMAND.equalsIgnoreCase(line.trim())) {

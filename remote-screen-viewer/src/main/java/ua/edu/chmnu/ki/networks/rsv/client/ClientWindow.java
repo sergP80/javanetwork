@@ -1,12 +1,10 @@
 package ua.edu.chmnu.ki.networks.rsv.client;
 
-import lombok.Getter;
-
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import java.awt.image.BufferedImage;
 
-@Getter
 public class ClientWindow {
 
     private final FramePanel framePanel = new FramePanel();
@@ -23,6 +21,10 @@ public class ClientWindow {
             Timer timer = new Timer(33, e -> framePanel.repaint());
             timer.start();
         });
+    }
+
+    public void updateFrame(BufferedImage image) {
+        this.framePanel.updateFrame(image);
     }
 
 }

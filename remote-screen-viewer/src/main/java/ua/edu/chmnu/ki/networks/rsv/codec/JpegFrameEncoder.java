@@ -10,8 +10,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class JpegFrameEncoder {
+public class JpegFrameEncoder implements FrameEncoder {
 
+    @Override
     public byte[] encode(BufferedImage image, float quality) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

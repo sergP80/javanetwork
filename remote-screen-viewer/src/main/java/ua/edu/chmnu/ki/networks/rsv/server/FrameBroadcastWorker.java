@@ -2,7 +2,8 @@ package ua.edu.chmnu.ki.networks.rsv.server;
 
 
 import lombok.AllArgsConstructor;
-import ua.edu.chmnu.ki.networks.rsv.codec.JpegFrameEncoder;
+import ua.edu.chmnu.ki.networks.rsv.codec.FrameEncoder;
+import ua.edu.chmnu.ki.networks.rsv.protocol.PacketType;
 import ua.edu.chmnu.ki.networks.rsv.transport.UdpTransport;
 
 import java.awt.image.BufferedImage;
@@ -20,7 +21,7 @@ public class FrameBroadcastWorker implements Runnable {
     private final UdpTransport transport;
     private final ClientRegistry clientRegistry;
     private final ScreenCaptureService captureService;
-    private final JpegFrameEncoder encoder;
+    private final FrameEncoder encoder;
     private final int fps;
     private final float jpegQuality;
     private final int packetSize;
@@ -81,10 +82,10 @@ public class FrameBroadcastWorker implements Runnable {
                                           byte[] source,
                                           int offset,
                                           int length) throws Exception {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(1 + 20 + length);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(HEADER_SIZE + length);
         DataOutputStream dos = new DataOutputStream(baos);
 
-        dos.writeByte(2);
+        dos.writeByte(PacketType.FRAME_CHUNK);
         dos.writeInt(frameId);
         dos.writeInt(totalChunks);
         dos.writeInt(chunkIndex);

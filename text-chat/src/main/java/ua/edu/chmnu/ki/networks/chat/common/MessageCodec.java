@@ -7,14 +7,14 @@ public final class MessageCodec {
     private MessageCodec() {
     }
 
-    public static String encode(ChatMessage message) {
+    public static String serialize(ChatMessage message) {
         return escape(message.type().name()) + SEPARATOR
                 + escape(nullToEmpty(message.from())) + SEPARATOR
                 + escape(nullToEmpty(message.text())) + SEPARATOR
                 + escape(nullToEmpty(message.pictureUrl()));
     }
 
-    public static ChatMessage decode(String raw) {
+    public static ChatMessage deserialize(String raw) {
         String[] parts = splitEscaped(raw, 4);
 
         MessageType type = MessageType.valueOf(unescape(parts[0]));

@@ -19,6 +19,6 @@ public class SocketMessageReceiver implements MessageReceiver {
         if (line == null) {
             return null;
         }
-        return MessageCodec.decode(line);
+        return MessageCodec.deserialize(line);
     }
 }
