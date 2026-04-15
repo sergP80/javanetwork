@@ -25,4 +25,8 @@ public class ClientRegistry {
     public Collection<ChatClientSession> all() {
         return sessions.values();
     }
+
+    public ChatClientSession get(String username) {
+        return sessions.get(username);
+    }
 }

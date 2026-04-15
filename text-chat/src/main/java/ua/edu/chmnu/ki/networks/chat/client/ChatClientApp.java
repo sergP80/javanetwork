@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import ua.edu.chmnu.ki.networks.core.config.ConfigReader;
 import ua.edu.chmnu.ki.networks.core.config.DefaultConfigReader;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -66,7 +67,7 @@ public class ChatClientApp {
                 submit.get();
 
                 running.set(false);
-                
+
             } catch (IOException e) {
                 System.err.println("Client error: " + e.getMessage());
             } catch (ExecutionException | InterruptedException e) {

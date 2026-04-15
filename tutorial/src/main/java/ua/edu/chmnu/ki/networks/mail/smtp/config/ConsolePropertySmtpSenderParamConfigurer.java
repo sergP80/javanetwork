@@ -15,6 +15,15 @@ public class ConsolePropertySmtpSenderParamConfigurer implements SmtpSenderParam
 
     private static final Console CONSOLE = System.console();
 
+    private static Properties loadProperties() throws IOException {
+        Properties properties = new Properties();
+
+        String senderSmtpPropertyPath = "/" + SMTP_SENDER + ".properties";
+        properties.load(ConsolePropertySmtpSenderParamConfigurer.class.getResourceAsStream(senderSmtpPropertyPath));
+
+        return properties;
+    }
+
     @Override
     public SmtpSenderConfig configure(EmailType emailType) throws IOException {
         Properties properties = loadProperties();
@@ -29,6 +38,7 @@ public class ConsolePropertySmtpSenderParamConfigurer implements SmtpSenderParam
             CONSOLE.printf("Enter smtp password: ");
             return new String(CONSOLE.readPassword());
         });
+
 
         smtpSenderParamsBuilder.smtpPassword(smtpPassword);
 
@@ -54,15 +64,6 @@ public class ConsolePropertySmtpSenderParamConfigurer implements SmtpSenderParam
         return CONSOLE;
     }
 
-    private static Properties loadProperties() throws IOException {
-        Properties properties = new Properties();
-
-        String senderSmtpPropertyPath = "/" + SMTP_SENDER + ".properties";
-        properties.load(ConsolePropertySmtpSenderParamConfigurer.class.getResourceAsStream(senderSmtpPropertyPath));
-
-        return properties;
-    }
-
     private String[] parseRecipients(String source) {
         if (StringUtils.isEmpty(source)) {
             throw new IllegalArgumentException("Enter a valid emails");
@@ -81,11 +82,28 @@ public class ConsolePropertySmtpSenderParamConfigurer implements SmtpSenderParam
                 paramsBuilder.templateName(templateName);
 
                 break;
+            case TEXT_ATTACHMENT:
+                String attachmentText = readPropertyFrom("smtp.content.text", properties, Function.identity());
+                paramsBuilder.text(attachmentText);
+
+                String attachmentsStr = readPropertyFrom("smtp.attachments", properties, Function.identity());
+                String[] attachments = parseAttachments(attachmentsStr);
+                paramsBuilder.attachments(attachments);
+                break;
             default:
                 String contentText = readPropertyFrom("smtp.contet.text", properties, Function.identity());
 
                 paramsBuilder.text(contentText);
         }
+
+    }
+
+    private String[] parseAttachments(String source) {
+        if (StringUtils.isEmpty(source)) {
+            return new String[0];
+        }
+
+        return source.split("[,;]+");
     }
 
     private <T> T readPropertyFrom(String propertyKey, Properties properties, Function<String, T> mapper, Supplier<T> defaultSupplier) {

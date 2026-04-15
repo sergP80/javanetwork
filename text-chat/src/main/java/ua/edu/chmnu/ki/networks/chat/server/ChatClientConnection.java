@@ -3,6 +3,7 @@ package ua.edu.chmnu.ki.networks.chat.server;
 
 import lombok.AllArgsConstructor;
 import ua.edu.chmnu.ki.networks.chat.common.ChatMessage;
+import ua.edu.chmnu.ki.networks.chat.common.MessageType;
 import ua.edu.chmnu.ki.networks.chat.server.message.MessageReceiver;
 import ua.edu.chmnu.ki.networks.chat.server.message.MessageSender;
 import ua.edu.chmnu.ki.networks.chat.server.message.SocketMessageReceiver;
@@ -62,6 +63,7 @@ public class ChatClientConnection implements Runnable {
             sender.send(ChatMessage.system("  text message"));
             sender.send(ChatMessage.system("  /pic <url>"));
             sender.send(ChatMessage.system("  /both <text> | <url>"));
+            sender.send(ChatMessage.system("  /pm <username> <text>"));
             sender.send(ChatMessage.system("  /quit"));
 
             broadcaster.broadcastExcept(username, ChatMessage.system(username + " joined the chat."));
@@ -77,7 +79,20 @@ public class ChatClientConnection implements Runnable {
 
                 ChatMessage normalized = normalizeIncomingMessage(username, message);
                 if (normalized != null) {
-                    broadcaster.broadcast(normalized);
+
+                    if (normalized.type() == MessageType.PRIVATE) {
+                        boolean delivered = broadcaster.sendPrivate(normalized.to(), normalized);
+                        if (delivered) {
+                            sender.send(ChatMessage.system("Message sent to " + normalized.to()));
+                        } else {
+                            sender.send(ChatMessage.system("User " + normalized.to() + " not found"));
+                        }
+
+
+                    } else {
+                        broadcaster.broadcast(normalized);
+
+                    }
                 }
             }
 

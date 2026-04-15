@@ -7,6 +7,7 @@ public class MessageUtils {
     public static final String PIC_COMMAND = "/pic ";
     public static final String BOTH_COMMAND = "/both ";
     public static final String QUIT_COMMAND = "/quit";
+    public static final String PRIVATE_COMMAND = "/pm ";
 
     public static ChatMessage toMessage(String username, String line) {
         if (line == null) {
@@ -19,6 +20,7 @@ public class MessageUtils {
         }
 
         if (QUIT_COMMAND.equalsIgnoreCase(trimmed)) {
+
             return ChatMessage.text(username, QUIT_COMMAND);
         }
 
@@ -51,6 +53,26 @@ public class MessageUtils {
             return ChatMessage.textAndPicture(username, text, url);
         }
 
+        if (trimmed.startsWith(PRIVATE_COMMAND)) {
+            String payload = trimmed.substring(PRIVATE_COMMAND.length());
+            int spaceIndex = payload.indexOf(' ');
+
+            if (spaceIndex < 0) {
+                System.out.println("Use format: /pm <username> <message>");
+                return null;
+            }
+
+            String recipient = payload.substring(0, spaceIndex).trim();
+            String text = payload.substring(spaceIndex + 1).trim();
+
+            if (recipient.isEmpty() || text.isEmpty()) {
+                System.out.println("Recipient or message cannot be empty.");
+                return null;
+            }
+
+            return ChatMessage.privateText(username, recipient, text);
+        }
+
         return ChatMessage.text(username, trimmed);
     }
 
@@ -77,6 +99,11 @@ public class MessageUtils {
                     return null;
                 }
                 return ChatMessage.textAndPicture(username, incoming.text(), incoming.pictureUrl());
+            case PRIVATE:
+                if (StringUtils.isBlank(incoming.text()) || StringUtils.isBlank(incoming.to())) {
+                    return null;
+                }
+                return ChatMessage.privateText(username, incoming.to(), incoming.text());
 
             default:
                 return null;
