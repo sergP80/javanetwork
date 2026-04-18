@@ -2,6 +2,8 @@ package ua.edu.chmnu.ki.networks.chat.client;
 
 
 import org.apache.commons.lang3.StringUtils;
+import ua.edu.chmnu.ki.networks.core.config.ConfigReader;
+import ua.edu.chmnu.ki.networks.core.config.DefaultConfigReader;
 
 
 import java.io.BufferedReader;
@@ -18,8 +20,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChatClientApp {
 
-    private static final String DEFAULT_HOST = "127.0.0.1";
-    private static final int DEFAULT_PORT = 7150;
+    private static final String ENV_CHAT_HOST = "CHAT_HOST";
+    private static final String ENV_CHAT_PORT = "CHAT_PORT";
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
@@ -34,10 +36,12 @@ public class ChatClientApp {
                 executor.shutdownNow();
             }));
 
-            String host = getEnv("CHAT_HOST", DEFAULT_HOST);
-            int port = getEnvInt("CHAT_PORT", DEFAULT_PORT);
+            ConfigReader configReader = new DefaultConfigReader(scanner);
 
-            ClientConfig config = new ClientConfig(host, port);
+            ClientConfig config = new ClientConfig(
+                    configReader.read(ENV_CHAT_HOST, "localhost"),
+                    configReader.readInt(ENV_CHAT_PORT, 7150)
+            );
 
             try (Socket socket = new Socket(config.host(), config.port());
                  BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -71,22 +75,5 @@ public class ChatClientApp {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    private static String getEnv(String envName, String defaultValue) {
-        String value = System.getenv(envName);
-        return value != null ? value : defaultValue;
-    }
-
-    private static int getEnvInt(String envName, int defaultValue) {
-        String value = System.getenv(envName);
-        if (value != null) {
-            try {
-                return Integer.parseInt(value);
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid " + envName + ", using default: " + defaultValue);
-            }
-        }
-        return defaultValue;
     }
 }
