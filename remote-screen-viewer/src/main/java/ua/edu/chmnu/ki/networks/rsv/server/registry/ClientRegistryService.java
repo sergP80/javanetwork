@@ -3,13 +3,13 @@ package ua.edu.chmnu.ki.networks.rsv.server.registry;
 import ua.edu.chmnu.ki.networks.rsv.protocol.ClientHello;
 
 import java.net.InetSocketAddress;
-import java.util.Set;
+import java.util.Collection;
 
 public interface ClientRegistryService {
 
     void register(ClientHello clientHello, InetSocketAddress address);
 
-    Set<InetSocketAddress> getClients();
+    Collection<ClientEntry> getClients();
 
     boolean isEmpty();
 }
