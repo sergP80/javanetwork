@@ -10,3 +10,5 @@ target
 *.txt
 *.zip
 *.rar
+client-registry.json
+client-registry.xml

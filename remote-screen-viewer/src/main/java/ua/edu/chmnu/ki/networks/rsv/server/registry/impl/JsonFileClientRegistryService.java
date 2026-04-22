@@ -25,6 +25,10 @@ public class JsonFileClientRegistryService implements ClientRegistryService {
         this.jsonFilePath = Paths.get(filPath);
     }
 
+    public JsonFileClientRegistryService(Path path) {
+        this.jsonFilePath = path;
+    }
+
     @SneakyThrows
     @Override
     public void register(ClientHello clientHello, InetSocketAddress address) {
@@ -64,6 +68,6 @@ public class JsonFileClientRegistryService implements ClientRegistryService {
         List<ClientEntry> clientEntries = JSON_MAPPER.readValue(jsonFilePath, new TypeReference<>() {
         });
 
-        return clientEntries != null && !clientEntries.isEmpty();
+        return clientEntries == null || clientEntries.isEmpty();
     }
 }

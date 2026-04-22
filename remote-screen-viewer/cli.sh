@@ -32,7 +32,37 @@ function server() {
       export UDP_PORT=$SERVER_PORT
     fi
 
-    local HEART_BEAT_FREQ="$2"
+    local REGISTRY_TYPE="$2"
+
+    if [[ -n "$REGISTRY_TYPE" ]];
+    then
+      export REGISTRY_TYPE=$REGISTRY_TYPE
+    fi
+
+    if [[ -n "$REGISTRY_TYPE" &&  "$REGISTRY_TYPE" != "IN_MEMORY" ]];
+    then
+      case $REGISTRY_TYPE in
+      "JSON_FILE")
+        read -p "Enter json file name:" FILE_NAME
+        if [[ "${FILE_NAME##*.}" == "$FILE_NAME" ]]; then
+            FILE_NAME="${FILE_NAME}.json"
+        fi
+        ;;
+      "XML_FILE")
+        read -p "Enter xml file name:" FILE_NAME
+        if [[ "${FILE_NAME##*.}" == "$FILE_NAME" ]]; then
+            FILE_NAME="${FILE_NAME}.xml"
+        fi
+        ;;
+      esac
+
+      if [[ -n "$FILE_NAME" ]];
+      then
+        export REGISTRY_NAME=$FILE_NAME
+      fi
+    fi
+
+    local HEART_BEAT_FREQ="$3"
 
     if [[ -n "$HEART_BEAT_FREQ" ]];
     then
