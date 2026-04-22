@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +49,7 @@ public class JsonFileClientRegistryService implements ClientRegistryService {
     }
 
     @Override
-    public Set<InetSocketAddress> getClients() {
+    public Collection<ClientEntry> getClients() {
         if (!Files.exists(jsonFilePath)) {
             return Set.of();
         }
@@ -56,7 +57,7 @@ public class JsonFileClientRegistryService implements ClientRegistryService {
         List<ClientEntry> clientEntries = JSON_MAPPER.readValue(jsonFilePath, new TypeReference<>() {
         });
 
-        return Set.copyOf(clientEntries.stream().map(ClientEntry::address).toList());
+        return Set.copyOf(clientEntries);
     }
 
     @Override

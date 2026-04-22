@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import ua.edu.chmnu.ki.networks.converter.InetSocketAddressConverter;
+import ua.edu.chmnu.ki.networks.rsv.server.registry.ClientEntry;
 import ua.edu.chmnu.ki.networks.rsv.server.registry.ClientRegistryService;
 
 import java.net.InetSocketAddress;
@@ -12,8 +13,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -46,13 +47,13 @@ class JsonFileClientRegistryServiceTest {
             "127.0.0.1:50009",
     })
     void shouldContainsClientByAddress(@ConvertWith(InetSocketAddressConverter.class) InetSocketAddress address) {
-        Set<InetSocketAddress> clients = service.getClients();
+        Collection<ClientEntry> clients = service.getClients();
 
-        Optional<InetSocketAddress> result = clients.stream().filter(i -> i.equals(address)).findFirst();
+        Optional<ClientEntry> result = clients.stream().filter(ce -> ce.address().equals(address)).findFirst();
 
         assertTrue(result.isPresent());
 
-        assertEquals(address, result.get());
+        assertEquals(address, result.get().address());
     }
 
     private static Path getResourcePath(String resourcePath) throws URISyntaxException {

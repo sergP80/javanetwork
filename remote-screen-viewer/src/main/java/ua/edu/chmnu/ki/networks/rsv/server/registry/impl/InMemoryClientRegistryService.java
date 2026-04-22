@@ -5,6 +5,7 @@ import ua.edu.chmnu.ki.networks.rsv.server.registry.ClientEntry;
 import ua.edu.chmnu.ki.networks.rsv.server.registry.ClientRegistryService;
 
 import java.net.InetSocketAddress;
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,8 +19,8 @@ public class InMemoryClientRegistryService implements ClientRegistryService {
     }
 
     @Override
-    public Set<InetSocketAddress> getClients() {
-        return Set.copyOf(clients.stream().map(ClientEntry::address).toList());
+    public Collection<ClientEntry> getClients() {
+        return Set.copyOf(clients);
     }
 
     @Override
