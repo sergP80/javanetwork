@@ -2,7 +2,7 @@ package ua.edu.chmnu.ki.networks.rsv.server.service.impl;
 
 import lombok.AllArgsConstructor;
 import ua.edu.chmnu.ki.networks.rsv.server.service.ClientBroadcastService;
-import ua.edu.chmnu.ki.networks.rsv.server.service.ClientRegistryService;
+import ua.edu.chmnu.ki.networks.rsv.server.registry.ClientRegistryService;
 import ua.edu.chmnu.ki.networks.rsv.transport.UdpTransport;
 
 import java.io.IOException;

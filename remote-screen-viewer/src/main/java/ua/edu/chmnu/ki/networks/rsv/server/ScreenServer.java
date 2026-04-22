@@ -8,11 +8,11 @@ import ua.edu.chmnu.ki.networks.rsv.codec.FrameEncoderFactoryImpl;
 import ua.edu.chmnu.ki.networks.rsv.common.AppRunner;
 import ua.edu.chmnu.ki.networks.rsv.deserializer.PacketDeserializeFactoryImpl;
 import ua.edu.chmnu.ki.networks.rsv.serializer.PacketSerializeFactoryImpl;
+import ua.edu.chmnu.ki.networks.rsv.server.registry.ClientRegistryService;
+import ua.edu.chmnu.ki.networks.rsv.server.registry.factory.ClientRegistryServiceFactoryImpl;
 import ua.edu.chmnu.ki.networks.rsv.server.service.ClientBroadcastService;
-import ua.edu.chmnu.ki.networks.rsv.server.service.ClientRegistryService;
 import ua.edu.chmnu.ki.networks.rsv.server.service.ScreenBroadcastService;
 import ua.edu.chmnu.ki.networks.rsv.server.service.impl.ClientBroadcastServiceImpl;
-import ua.edu.chmnu.ki.networks.rsv.server.service.impl.ClientRegistryServiceImpl;
 import ua.edu.chmnu.ki.networks.rsv.server.service.impl.ScreenBroadcastServiceImpl;
 import ua.edu.chmnu.ki.networks.rsv.server.service.impl.ScreenServiceImpl;
 import ua.edu.chmnu.ki.networks.rsv.transport.DatagramUdpTransport;
@@ -34,7 +34,7 @@ public class ScreenServer implements AppRunner {
         this.config = config;
         this.executor = Executors.newFixedThreadPool(4);
         this.transport = new DatagramUdpTransport();
-        this.clientRegistryService = new ClientRegistryServiceImpl();
+        this.clientRegistryService = new ClientRegistryServiceFactoryImpl().fetchBy(config.registryConfig());
         this.frameEncoderFactory = new FrameEncoderFactoryImpl();
     }
 

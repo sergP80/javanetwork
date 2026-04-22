@@ -6,7 +6,7 @@ import ua.edu.chmnu.ki.networks.rsv.deserializer.PacketDeserializeFactory;
 import ua.edu.chmnu.ki.networks.rsv.deserializer.PacketDeserializer;
 import ua.edu.chmnu.ki.networks.rsv.protocol.ClientHello;
 import ua.edu.chmnu.ki.networks.rsv.protocol.PacketFrame;
-import ua.edu.chmnu.ki.networks.rsv.server.service.ClientRegistryService;
+import ua.edu.chmnu.ki.networks.rsv.server.registry.ClientRegistryService;
 import ua.edu.chmnu.ki.networks.rsv.transport.UdpTransport;
 
 import java.net.DatagramPacket;
@@ -39,7 +39,7 @@ public class ServerListenerWorker implements Runnable {
 
                 if (packetFrame instanceof ClientHello clientHello) {
                     InetSocketAddress address = new InetSocketAddress(packet.getAddress(), packet.getPort());
-                    clientRegistryService.register(address);
+                    clientRegistryService.register(clientHello, address);
                     System.out.println("Registered client: " + clientHello.clientName() + " at " + address);
                 }
 
