@@ -2,7 +2,7 @@ package ua.edu.chmnu.ki.networks.rsv.server;
 
 
 import lombok.AllArgsConstructor;
-import ua.edu.chmnu.ki.networks.rsv.server.service.ClientRegistryService;
+import ua.edu.chmnu.ki.networks.rsv.server.registry.ClientRegistryService;
 import ua.edu.chmnu.ki.networks.rsv.server.service.ScreenBroadcastService;
 
 @AllArgsConstructor
