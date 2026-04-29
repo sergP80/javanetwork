@@ -1,6 +1,7 @@
 package ua.edu.chmnu.ki.networks.mail.utils;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -22,13 +23,15 @@ public class MailUtils {
     }
 
     public static InternetAddress[] getInetAddressList(String[] addresses) {
-        return Arrays.stream(addresses).map(a -> {
-            try {
-                return new InternetAddress(a);
-            } catch (AddressException e) {
-                return null;
-            }
-        }).filter(Objects::nonNull).toArray(InternetAddress[]::new);
+        return Arrays.stream(addresses)
+                .filter(StringUtils::isNotBlank)
+                .map(a -> {
+                    try {
+                        return new InternetAddress(a);
+                    } catch (AddressException e) {
+                        return null;
+                    }
+                }).filter(Objects::nonNull).toArray(InternetAddress[]::new);
     }
 
     public static void verifyRequiredSettings(MimeMessage message) throws MessagingException, IOException {

@@ -1,11 +1,17 @@
 package ua.edu.chmnu.ki.networks.mail.smtp.senders;
 
+import lombok.Getter;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import ua.edu.chmnu.ki.networks.mail.smtp.SimpleEmailSender;
 import ua.edu.chmnu.ki.networks.mail.utils.MailUtils;
 
-import javax.mail.*;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.FileInputStream;
@@ -13,11 +19,12 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
 
+@Getter
 public abstract class AbstractSmtpSender implements SmtpSender {
     private static final String SMTP_SETTINGS = "smtp.settings";
 
-    private Session session;
-    private MimeMessage mimeMessage;
+    private final Session session;
+    protected MimeMessage mimeMessage;
 
     public AbstractSmtpSender(Session session) {
         this.session = session;
@@ -27,14 +34,6 @@ public abstract class AbstractSmtpSender implements SmtpSender {
     public AbstractSmtpSender(String smtpUser, String smtpPassword) throws IOException {
         this.session = createSmtpSession(smtpUser, smtpPassword);
         this.mimeMessage = createMimeMessage(session);
-    }
-
-    public Session getSession() {
-        return session;
-    }
-
-    public MimeMessage getMimeMessage() {
-        return mimeMessage;
     }
 
     public static Session createSmtpSession(String smtpUser, String smtpPassword) throws IOException {

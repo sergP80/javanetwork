@@ -1,4 +1,4 @@
-package ua.edu.chmnu.ki.networks.mail.smtp;
+package ua.edu.chmnu.ki.networks.mail.smtp.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SmtpSenderParams {
+public class SmtpSenderConfig {
     private String smtpUser;
     private String smtpPassword;
     private String subject;
