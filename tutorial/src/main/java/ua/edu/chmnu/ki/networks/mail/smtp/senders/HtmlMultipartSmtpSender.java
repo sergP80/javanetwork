@@ -15,10 +15,6 @@ public class HtmlMultipartSmtpSender extends HtmlSmtpSender {
 
     private final MimeMultipart mimeMultipart = new MimeMultipart();
 
-    public HtmlMultipartSmtpSender(Session session) {
-        super(session);
-    }
-
     public HtmlMultipartSmtpSender(String smtpUser, String smtpPassword) throws IOException {
         super(smtpUser, smtpPassword);
     }
@@ -33,7 +29,7 @@ public class HtmlMultipartSmtpSender extends HtmlSmtpSender {
     }
 
     public HtmlMultipartSmtpSender withAttachments(String[] attachments) throws MessagingException {
-        for (String attachment: attachments) {
+        for (String attachment : attachments) {
             if (Files.exists(Paths.get(attachment))) {
                 addAttachment(this.mimeMultipart, attachment);
             }
@@ -45,5 +41,11 @@ public class HtmlMultipartSmtpSender extends HtmlSmtpSender {
         MimeBodyPart bodyPart = new MimeBodyPart();
         bodyPart.setDataHandler(new DataHandler(new FileDataSource(attachment)));
         multipart.addBodyPart(bodyPart);
+    }
+
+    @Override
+    public void send() throws MessagingException, IOException {
+        this.mimeMessage.setContent(mimeMultipart);
+        super.send();
     }
 }

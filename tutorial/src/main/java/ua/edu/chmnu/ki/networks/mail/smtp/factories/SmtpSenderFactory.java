@@ -1,6 +1,6 @@
 package ua.edu.chmnu.ki.networks.mail.smtp.factories;
 
-import ua.edu.chmnu.ki.networks.mail.smtp.SmtpSenderParams;
+import ua.edu.chmnu.ki.networks.mail.smtp.config.SmtpSenderConfig;
 import ua.edu.chmnu.ki.networks.mail.smtp.senders.SmtpSender;
 
 import javax.mail.MessagingException;
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public interface SmtpSenderFactory {
-    SmtpSender create(SmtpSenderParams params) throws IOException, MessagingException;
+    SmtpSender create(SmtpSenderConfig params) throws IOException, MessagingException;
 
     static SmtpSenderFactory createFactory(EmailType emailType) {
         Map<EmailType, SmtpSenderFactory> map = new HashMap<>();
