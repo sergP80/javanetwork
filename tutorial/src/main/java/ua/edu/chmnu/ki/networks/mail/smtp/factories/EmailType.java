@@ -1,7 +1,7 @@
 package ua.edu.chmnu.ki.networks.mail.smtp.factories;
 
 public enum EmailType {
-    TEXT, HTML, HTML_MULTI_PART;
+    TEXT, HTML, HTML_MULTI_PART, TEXT_ATTACHMENT;
 
     public static EmailType of(int index) {
         for (int i = 0; i < values().length; ++i) {

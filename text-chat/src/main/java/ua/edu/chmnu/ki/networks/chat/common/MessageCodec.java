@@ -11,7 +11,6 @@ public final class MessageCodec {
         return escape(message.type().name()) + SEPARATOR
                 + escape(nullToEmpty(message.from())) + SEPARATOR
                 + escape(nullToEmpty(message.to())) + SEPARATOR
-                + escape(nullToEmpty(message.to())) + SEPARATOR
                 + escape(nullToEmpty(message.text())) + SEPARATOR
                 + escape(nullToEmpty(message.pictureUrl()));
     }
