@@ -38,7 +38,7 @@ public class ConsolePropertySmtpSenderParamConfigurer implements SmtpSenderParam
             CONSOLE.printf("Enter smtp password: ");
             return new String(CONSOLE.readPassword());
         });
-        System.out.println("Password read from input: " + smtpPassword);
+
 
         smtpSenderParamsBuilder.smtpPassword(smtpPassword);
 
