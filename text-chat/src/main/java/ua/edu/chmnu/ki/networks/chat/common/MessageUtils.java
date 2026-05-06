@@ -64,7 +64,6 @@ public class MessageUtils {
 
             String recipient = payload.substring(0, spaceIndex).trim();
             String text = payload.substring(spaceIndex + 1).trim();
-//            System.out.println(recipient + ' ' + text);
 
             if (recipient.isEmpty() || text.isEmpty()) {
                 System.out.println("Recipient or message cannot be empty.");
