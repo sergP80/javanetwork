@@ -28,8 +28,6 @@ public class GamerPool {
     }
 
     public synchronized void drawAll(ShapeContext context) {
-        this.participants.forEach(gi -> {
-            gi.getShape().draw(context);
-        });
+        this.participants.forEach(gi -> gi.getShape().draw(context));
     }
 }

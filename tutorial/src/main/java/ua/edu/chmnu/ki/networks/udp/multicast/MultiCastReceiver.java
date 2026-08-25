@@ -1,5 +1,7 @@
 package ua.edu.chmnu.ki.networks.udp.multicast;
 
+import lombok.Getter;
+import lombok.Setter;
 import ua.edu.chmnu.ki.networks.utils.NetworkUtils;
 
 import java.io.IOException;
@@ -10,9 +12,14 @@ import java.util.logging.Logger;
 
 public class MultiCastReceiver implements Runnable {
 
+    @Getter
     private final String group;
+    @Getter
     private final int groupPort;
+    @Setter
+    @Getter
     private boolean active = true;
+    @Getter
     private final int timeout;
     private final MulticastSocket socket;
 
@@ -32,33 +39,13 @@ public class MultiCastReceiver implements Runnable {
         this(group, groupPort, 0);
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public int getGroupPort() {
-        return groupPort;
-    }
-    
-    public int getTimeout() {
-        return timeout;
-    }
-
     @Override
     public void run() {
         try {
             InetAddress address = InetAddress.getByName(group);
             try (MulticastSocket clientSocket = this.socket) {
                 clientSocket.joinGroup(address);
-                byte buffer[] = new byte[1024 * 2];
+                byte[] buffer = new byte[1024 * 2];
                 int count = 0;
                 while (isActive() && Thread.currentThread().isAlive() && count < 100) {
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
@@ -73,9 +60,7 @@ public class MultiCastReceiver implements Runnable {
                     ++count;
                 }
                 clientSocket.leaveGroup(address);
-            } catch (IOException ex) {
-                Logger.getLogger(MultiCastReceiver.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InterruptedException ex) {
+            } catch (IOException | InterruptedException ex) {
                 Logger.getLogger(MultiCastReceiver.class.getName()).log(Level.SEVERE, null, ex);
             }
 

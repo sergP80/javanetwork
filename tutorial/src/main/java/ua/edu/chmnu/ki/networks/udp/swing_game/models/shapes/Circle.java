@@ -4,7 +4,7 @@ import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Position;
 import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Size;
 
 public class Circle implements Shape {
-    private Position center;
+    private final Position center;
     private int radius;
 
     public Circle(Position center, int radius) {

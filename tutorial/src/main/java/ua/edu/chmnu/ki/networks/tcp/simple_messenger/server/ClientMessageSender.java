@@ -27,8 +27,7 @@ public class ClientMessageSender {
 
            out.writeObject(message);
         } catch (IOException e) {
-
-
+            System.out.println("Failed to send message to client " + message.clientId());
         }
     }
 }

@@ -11,23 +11,16 @@ public class MainFrame extends JFrame {
     private static final int WIDTH  = 640;
     private static final int HEIGHT = 480;
 
-    private GamePanel gamePanel;
-
-    private final GamerPool gamerPool;
-    private final UdpSender udpSender;
-
     public MainFrame(String title, GamerPool gamerPool, UdpSender udpSender) throws HeadlessException {
-        this.gamerPool = gamerPool;
-        this.udpSender = udpSender;
 
         setTitle(title);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationByPlatform(true);
 
-        LoginDialog loginDialog = new LoginDialog(this, this.gamerPool);
+        LoginDialog loginDialog = new LoginDialog(this, gamerPool);
         loginDialog.setVisible(true);
 
-        gamePanel = new GamePanel(loginDialog.getCurrentGamer(), this.gamerPool, this.udpSender);
+        GamePanel gamePanel = new GamePanel(loginDialog.getCurrentGamer(), gamerPool, udpSender);
         add(gamePanel);
         setLocationAndSize();
         setVisible(true);

@@ -14,21 +14,21 @@ public class MultiCastReceiverApp {
         ExecutorService service = Executors.newFixedThreadPool(10);
         String group = "224.0.0.3";
         int port = 5559;
-        for (int i = 0; i < args.length; ++i) {
-            String value = extractValue(args[i], "-g:");
+        for (String arg : args) {
+            String value = extractValue(arg, "-g:");
             if (value != null) {
                 group = value;
                 continue;
             }
 
-            value = extractValue(args[i], "-p:");
+            value = extractValue(arg, "-p:");
             if (value != null) {
                 port = Integer.parseInt(value);
             }
 
         }
         int n = 3;
-        MultiCastReceiver receivers[] = new MultiCastReceiver[n];
+        MultiCastReceiver[] receivers = new MultiCastReceiver[n];
         
         for (int i = 0; i < n; ++i) {
             service.submit(receivers[i] = new MultiCastReceiver(group, port));

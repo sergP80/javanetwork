@@ -1,5 +1,8 @@
 package ua.edu.chmnu.ki.networks.udp.multicast;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -10,32 +13,21 @@ import java.util.logging.Logger;
 
 public class MultiCastSender implements Runnable {
 
+    @Getter
     private final String group;
+    @Getter
     private final int groupPort;
+    @Setter
+    @Getter
     private boolean active = true;
     private final MulticastSocket socket;
+    @Getter
     private MultiCastDataAction action;
 
     public MultiCastSender(String group, int groupPort) throws IOException {
         this.group = group;
         this.groupPort = groupPort;
         this.socket = new MulticastSocket();
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public int getGroupPort() {
-        return groupPort;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;        
     }
 
     @Override
@@ -68,10 +60,6 @@ public class MultiCastSender implements Runnable {
         } finally {
             this.active = false;
         }
-    }
-    
-     public MultiCastDataAction getAction() {
-        return action;
     }
 
     public MultiCastSender setAction(MultiCastDataAction action) {

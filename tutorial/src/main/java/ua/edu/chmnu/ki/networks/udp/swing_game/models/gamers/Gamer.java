@@ -1,13 +1,16 @@
 package ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers;
 
+import lombok.Getter;
 import ua.edu.chmnu.ki.networks.udp.swing_game.models.shapes.Shape;
 
 import java.util.UUID;
 
 public class Gamer implements java.io.Serializable {
-    private UUID uuid;
-    private String name;
-    private Shape shape;
+    private final UUID uuid;
+    @Getter
+    private final String name;
+    @Getter
+    private final Shape shape;
 
     public Gamer(UUID uuid, String name, Shape shape) {
         this.uuid = uuid;
@@ -17,14 +20,6 @@ public class Gamer implements java.io.Serializable {
 
     public UUID getId() {
         return uuid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Shape getShape() {
-        return shape;
     }
 
     public void setPosition(Position position) {

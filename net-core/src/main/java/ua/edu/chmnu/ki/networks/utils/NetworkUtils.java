@@ -15,7 +15,7 @@ public class NetworkUtils {
     /**
      * This method retrieves all up and non-loopback interfaces
      * @return list of available network interfaces 
-     * @throws SocketException 
+     * @throws SocketException
      */
     public static List<NetworkInterface> getAvailableInterfaces() throws SocketException {
         return Collections.list(NetworkInterface.getNetworkInterfaces())
@@ -38,7 +38,7 @@ public class NetworkUtils {
     public static List<InetAddress> getAvailableInetAddresses() throws SocketException {
         return getAvailableInterfaces().stream()
                 .flatMap(iface
-                        -> iface.getInterfaceAddresses().stream().map(a -> a.getAddress()))
+                        -> iface.getInterfaceAddresses().stream().map(InterfaceAddress::getAddress))
                 .collect(Collectors.toList());
     }
     /**
@@ -51,7 +51,7 @@ public class NetworkUtils {
         return getAvailableInterfaces().stream()
                 .flatMap(iface -> iface.getInterfaceAddresses().stream())
                 .filter(ifaceAddr -> ifaceAddr.getBroadcast() instanceof Inet4Address)
-                .map(ifaceAddr -> ifaceAddr.getAddress())
+                .map(InterfaceAddress::getAddress)
                 .collect(Collectors.toList());
     }
     /**
@@ -64,7 +64,7 @@ public class NetworkUtils {
         return getAvailableInterfaces().stream()
                 .flatMap(iface -> iface.getInterfaceAddresses().stream())
                 .filter(ifaceAddr -> ifaceAddr.getBroadcast() instanceof Inet6Address)
-                .map(ifaceAddr -> ifaceAddr.getAddress())
+                .map(InterfaceAddress::getAddress)
                 .collect(Collectors.toList());
     }
     /**
@@ -84,7 +84,7 @@ public class NetworkUtils {
                     }
                 })
                 .flatMap(iface
-                        -> iface.getInterfaceAddresses().stream().map(a -> a.getAddress())
+                        -> iface.getInterfaceAddresses().stream().map(InterfaceAddress::getAddress)
                 )
                 .filter(a -> a instanceof Inet4Address)
                 .collect(Collectors.toList());

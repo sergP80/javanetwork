@@ -6,7 +6,7 @@ import java.io.Console;
 import java.util.Scanner;
 
 public class ImapReceiverApp {
-	public static void main(String[] args) throws NoSuchProviderException, InterruptedException {
+	public static void main(String[] args) throws NoSuchProviderException {
 		Console console = System.console();
 		console.printf("Enter mailbox: ");
 		String mailBox = console.readLine();

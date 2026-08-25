@@ -4,8 +4,8 @@ import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Position;
 import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Size;
 
 public class Rectangle implements Shape {
-    private Position center;
-    private Size size;
+    private final Position center;
+    private final Size size;
 
     public Rectangle(Position center, Size size) {
         this.center = center;

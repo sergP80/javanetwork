@@ -4,7 +4,7 @@ import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Position;
 import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Size;
 
 public class Square implements Shape {
-    private Position center;
+    private final Position center;
     private int size;
 
     public Square(Position center, int size) {

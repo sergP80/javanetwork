@@ -1,13 +1,16 @@
 
 package ua.edu.chmnu.ki.networks.tcp.simple;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 
+@Getter
 public class SimpleTCPServer implements Runnable {
 
     public static final String DEFAULT_HOST = "0.0.0.0";
@@ -19,25 +22,26 @@ public class SimpleTCPServer implements Runnable {
     private final int backlog;
     private final ServerSocket serverSocket;
 
+    @Setter
     private ExecutorService executor;
     private boolean active = true;
 
-    public SimpleTCPServer(String host, int port, int backlog) throws UnknownHostException, IOException {
+    public SimpleTCPServer(String host, int port, int backlog) throws IOException {
         this.host = host;
         this.port = port;
         this.backlog = backlog;
         this.serverSocket = new ServerSocket(port, backlog, InetAddress.getByName(host));        
     }
 
-    public SimpleTCPServer(int port, int backlog) throws UnknownHostException, IOException {
+    public SimpleTCPServer(int port, int backlog) throws IOException {
         this(DEFAULT_HOST, port, backlog);
     }
 
-    public SimpleTCPServer(int port) throws UnknownHostException, IOException {
+    public SimpleTCPServer(int port) throws IOException {
         this(DEFAULT_HOST, port, DEFAULT_BACKLOG);
     }
     
-    public SimpleTCPServer() throws UnknownHostException, IOException {
+    public SimpleTCPServer() throws IOException {
         this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_BACKLOG);
     }
 
@@ -59,26 +63,6 @@ public class SimpleTCPServer implements Runnable {
         }
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public int getBacklog() {
-        return backlog;
-    }
-
-    public ServerSocket getServerSocket() {
-        return serverSocket;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
     public void setActive(boolean active) throws IOException {
         this.active = active;
         if (!this.active) {
@@ -88,11 +72,4 @@ public class SimpleTCPServer implements Runnable {
         }
     }
 
-    public ExecutorService getExecutor() {
-        return executor;
-    }
-
-    public void setExecutor(ExecutorService executor) {
-        this.executor = executor;
-    }
 }

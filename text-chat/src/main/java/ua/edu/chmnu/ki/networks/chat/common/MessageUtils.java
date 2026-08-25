@@ -81,32 +81,32 @@ public class MessageUtils {
             return null;
         }
 
-        switch (incoming.type()) {
-            case TEXT:
+        return switch (incoming.type()) {
+            case TEXT -> {
                 if (StringUtils.isBlank(incoming.text())) {
-                    return null;
+                    yield null;
                 }
-                return ChatMessage.text(username, incoming.text());
-
-            case PICTURE:
+                yield ChatMessage.text(username, incoming.text());
+            }
+            case PICTURE -> {
                 if (StringUtils.isBlank(incoming.text())) {
-                    return null;
+                    yield null;
                 }
-                return ChatMessage.picture(username, incoming.pictureUrl());
-
-            case TEXT_AND_PICTURE:
+                yield ChatMessage.picture(username, incoming.pictureUrl());
+            }
+            case TEXT_AND_PICTURE -> {
                 if (StringUtils.isAllBlank(incoming.text(), incoming.pictureUrl())) {
-                    return null;
+                    yield null;
                 }
-                return ChatMessage.textAndPicture(username, incoming.text(), incoming.pictureUrl());
-            case PRIVATE:
+                yield ChatMessage.textAndPicture(username, incoming.text(), incoming.pictureUrl());
+            }
+            case PRIVATE -> {
                 if (StringUtils.isBlank(incoming.text()) || StringUtils.isBlank(incoming.to())) {
-                    return null;
+                    yield null;
                 }
-                return ChatMessage.privateText(username, incoming.to(), incoming.text());
-
-            default:
-                return null;
-        }
+                yield ChatMessage.privateText(username, incoming.to(), incoming.text());
+            }
+            default -> null;
+        };
     }
 }

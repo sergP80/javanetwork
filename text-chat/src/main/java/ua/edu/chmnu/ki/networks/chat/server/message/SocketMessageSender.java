@@ -7,7 +7,7 @@ import ua.edu.chmnu.ki.networks.chat.common.MessageCodec;
 import java.io.PrintWriter;
 
 @AllArgsConstructor
-public class SocketMessageSender implements MessageSender{
+public class SocketMessageSender implements MessageSender {
 
     private final PrintWriter writer;
 

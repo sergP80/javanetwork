@@ -1,6 +1,8 @@
 
 package ua.edu.chmnu.ki.networks.tcp.core.server;
 
+import lombok.Getter;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -13,12 +15,18 @@ public class Server implements Runnable {
     public static final int DEFAULT_PORT = 5558;
     public static final int DEFAULT_BACKLOG = 50;
 
+    @Getter
     private final String host;
+    @Getter
     private final int port;
+    @Getter
     private final int backlog;
+    @Getter
     private final ServerSocket serverSocket;
 
+    @Getter
     private final ExecutorService executor;
+    @Getter
     private boolean active = true;
     private final ClientSessionDelegate handler;
 
@@ -58,26 +66,6 @@ public class Server implements Runnable {
         }
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public int getBacklog() {
-        return backlog;
-    }
-
-    public ServerSocket getServerSocket() {
-        return serverSocket;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
     public void setActive(boolean active) throws IOException {
         this.active = active;
         if (!this.active) {
@@ -87,7 +75,4 @@ public class Server implements Runnable {
         }
     }
 
-    public ExecutorService getExecutor() {
-        return executor;
-    }
 }

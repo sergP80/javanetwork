@@ -5,7 +5,6 @@ import ua.edu.chmnu.ki.networks.core.config.ConfigReader;
 import ua.edu.chmnu.ki.networks.core.config.DefaultConfigReader;
 
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChatServerApp {
 

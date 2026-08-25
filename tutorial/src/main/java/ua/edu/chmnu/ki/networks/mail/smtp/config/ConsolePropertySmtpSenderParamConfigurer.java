@@ -118,7 +118,7 @@ public class ConsolePropertySmtpSenderParamConfigurer implements SmtpSenderParam
                 .or(() -> Optional.ofNullable(properties.getProperty(propertyKey)))
                 .map(mapper)
                 .orElseGet(() -> {
-                    CONSOLE.printf("Enter " + propertyKey + ":");
+                    CONSOLE.printf("Enter %s:", propertyKey);
                     return mapper.apply(CONSOLE.readLine());
                 });
     }

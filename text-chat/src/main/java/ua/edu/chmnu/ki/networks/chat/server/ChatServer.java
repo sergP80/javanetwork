@@ -1,5 +1,8 @@
 package ua.edu.chmnu.ki.networks.chat.server;
 
+import ua.edu.chmnu.ki.networks.chat.server.broadcast.ChatBroadcaster;
+import ua.edu.chmnu.ki.networks.chat.server.broadcast.DefaultChatBroadcaster;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,7 +20,7 @@ public class ChatServer {
     public ChatServer(ServerConfig config) {
         this.config = config;
         this.clientRegistry = new ClientRegistry();
-        this.broadcaster = new ChatBroadcaster(clientRegistry);
+        this.broadcaster = new DefaultChatBroadcaster(clientRegistry);
     }
 
     public void start() {

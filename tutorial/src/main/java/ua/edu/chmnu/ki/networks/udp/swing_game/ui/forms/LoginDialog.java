@@ -1,5 +1,6 @@
 package ua.edu.chmnu.ki.networks.udp.swing_game.ui.forms;
 
+import lombok.Getter;
 import ua.edu.chmnu.ki.networks.udp.swing_game.core.GamerPool;
 import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Gamer;
 import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Position;
@@ -21,6 +22,7 @@ public class LoginDialog extends JDialog {
     private static final Size DEFAULT_SHAPE_SIZE = Size.of(50, 50);
 
     private final GamerPool gamerPool;
+    @Getter
     private Gamer currentGamer = null;
 
     private DefaultComboBoxModel<ShapeType> shapeModel;
@@ -56,7 +58,4 @@ public class LoginDialog extends JDialog {
         }));
     }
 
-    public Gamer getCurrentGamer() {
-        return currentGamer;
-    }
 }

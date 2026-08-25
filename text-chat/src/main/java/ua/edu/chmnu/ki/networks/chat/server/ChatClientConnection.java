@@ -4,10 +4,13 @@ package ua.edu.chmnu.ki.networks.chat.server;
 import lombok.AllArgsConstructor;
 import ua.edu.chmnu.ki.networks.chat.common.ChatMessage;
 import ua.edu.chmnu.ki.networks.chat.common.MessageType;
+import ua.edu.chmnu.ki.networks.chat.server.broadcast.ChatBroadcaster;
 import ua.edu.chmnu.ki.networks.chat.server.message.MessageReceiver;
 import ua.edu.chmnu.ki.networks.chat.server.message.MessageSender;
 import ua.edu.chmnu.ki.networks.chat.server.message.SocketMessageReceiver;
 import ua.edu.chmnu.ki.networks.chat.server.message.SocketMessageSender;
+import ua.edu.chmnu.ki.networks.chat.server.session.ChatClientSession;
+import ua.edu.chmnu.ki.networks.chat.server.session.DefaultChatClientSession;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,7 +58,7 @@ public class ChatClientConnection implements Runnable {
                 return;
             }
 
-            ChatClientSession session = new ChatClientSessionSender(username, sender);
+            ChatClientSession session = new DefaultChatClientSession(username, sender);
             clientRegistry.register(session);
 
             sender.send(ChatMessage.system("Connected as " + username));
@@ -66,7 +69,7 @@ public class ChatClientConnection implements Runnable {
             sender.send(ChatMessage.system("  /pm <username> <text>"));
             sender.send(ChatMessage.system("  /quit"));
 
-            broadcaster.broadcastExcept(username, ChatMessage.system(username + " joined the chat."));
+            broadcaster.sendToAllExcept(username, ChatMessage.system(username + " joined the chat."));
 
             MessageReceiver receiver = new SocketMessageReceiver(reader);
 
@@ -81,7 +84,7 @@ public class ChatClientConnection implements Runnable {
                 if (normalized != null) {
 
                     if (normalized.type() == MessageType.PRIVATE) {
-                        boolean delivered = broadcaster.sendPrivate(normalized.to(), normalized);
+                        boolean delivered = broadcaster.sendToPrivate(normalized.to(), normalized);
                         if (delivered) {
                             sender.send(ChatMessage.system("Message sent to " + normalized.to()));
                         } else {
@@ -90,7 +93,7 @@ public class ChatClientConnection implements Runnable {
 
 
                     } else {
-                        broadcaster.broadcast(normalized);
+                        broadcaster.sendToAll(normalized);
 
                     }
                 }
@@ -101,7 +104,7 @@ public class ChatClientConnection implements Runnable {
         } finally {
             clientRegistry.unregister(username);
             if (username != null) {
-                broadcaster.broadcast(ChatMessage.system(username + " left the chat."));
+                broadcaster.sendToAll(ChatMessage.system(username + " left the chat."));
             }
         }
     }

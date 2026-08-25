@@ -7,7 +7,6 @@ package ua.edu.chmnu.ki.networks.tcp.core.server;
 
 import lombok.Getter;
 
-import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +17,7 @@ public class ClientSession implements Runnable {
     private final Socket socket;
     private final ClientSessionDelegate delegate;
 
-    public ClientSession(Socket socket, ClientSessionDelegate delegate) throws IOException {
+    public ClientSession(Socket socket, ClientSessionDelegate delegate) {
         this.socket = socket;
         this.delegate = delegate;
     }

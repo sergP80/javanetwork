@@ -1,5 +1,7 @@
 package ua.edu.chmnu.ki.networks.chat.server;
 
+import ua.edu.chmnu.ki.networks.chat.server.session.ChatClientSession;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -8,8 +10,8 @@ public class ClientRegistry {
 
     private final Map<String, ChatClientSession> sessions = new ConcurrentHashMap<>();
 
-    public boolean register(ChatClientSession session) {
-        return sessions.putIfAbsent(session.getUsername(), session) == null;
+    public void register(ChatClientSession session) {
+        sessions.putIfAbsent(session.getUsername(), session);
     }
 
     public void unregister(String username) {

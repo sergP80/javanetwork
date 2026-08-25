@@ -1,11 +1,13 @@
 package ua.edu.chmnu.ki.networks.udp.swing_game.models.shapes;
 
+import lombok.Getter;
 import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Position;
 import ua.edu.chmnu.ki.networks.udp.swing_game.models.gamers.Size;
 
 import java.io.Serializable;
 import java.util.function.BiFunction;
 
+@Getter
 public enum ShapeType implements Serializable {
     RECTANGLE(1) {
         @Override
@@ -32,14 +34,10 @@ public enum ShapeType implements Serializable {
         }
     };
 
-    private int id;
+    private final int id;
 
     ShapeType(int id) {
         this.id = id;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public abstract BiFunction<Position, Size, Shape> builder();

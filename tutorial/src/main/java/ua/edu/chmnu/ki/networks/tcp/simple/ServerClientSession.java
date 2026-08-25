@@ -5,6 +5,8 @@
  */
 package ua.edu.chmnu.ki.networks.tcp.simple;
 
+import lombok.Getter;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,6 +19,7 @@ import java.util.logging.Logger;
  * @author svpuzyrov
  */
 public class ServerClientSession implements Runnable{
+    @Getter
     private final Socket socket;
     private final ObjectInputStream inS;
     private final ObjectOutputStream outS;
@@ -25,10 +28,6 @@ public class ServerClientSession implements Runnable{
         this.socket = socket;
         inS = new ObjectInputStream(socket.getInputStream());
         outS = new ObjectOutputStream(socket.getOutputStream());
-    }
-
-    public Socket getSocket() {
-        return socket;
     }
 
     @Override

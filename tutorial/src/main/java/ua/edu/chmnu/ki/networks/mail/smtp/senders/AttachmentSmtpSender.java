@@ -3,7 +3,6 @@ package ua.edu.chmnu.ki.networks.mail.smtp.senders;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.MessagingException;
-import javax.mail.Session;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import java.io.File;

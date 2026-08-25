@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -37,7 +36,7 @@ public class Downloader implements Runnable {
      * @param progressIndicator - progress
      * @throws MalformedURLException
      */
-    public Downloader(String url, String destDir, ProgressIndicator progressIndicator) throws MalformedURLException, UnsupportedEncodingException {
+    public Downloader(String url, String destDir, ProgressIndicator progressIndicator) throws MalformedURLException {
         this.srcUrl = new URL(url);
         this.destDir = destDir;
         this.progressIndicator = progressIndicator;
@@ -53,7 +52,7 @@ public class Downloader implements Runnable {
      * @param bufferSize - size of buffer to download
      * @throws MalformedURLException
      */
-    public Downloader(String url, String destDir, ProgressIndicator progressIndicator, int bufferSize) throws MalformedURLException, UnsupportedEncodingException {
+    public Downloader(String url, String destDir, ProgressIndicator progressIndicator, int bufferSize) throws MalformedURLException {
         this(url, destDir, progressIndicator);
         this.bufferSize = bufferSize;
     }

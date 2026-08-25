@@ -15,7 +15,11 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+/**
+ * Use input params for host and port this example
+ * String host = "5.tcp.eu.ngrok.io";
+ * int port = 14262;
+ */
 public class MultiClientApp {
     public static void main(String[] args) throws InterruptedException, IOException {
         double[][] testData = {
@@ -45,9 +49,6 @@ public class MultiClientApp {
         String host = urlParts[0];
 
         int port = Integer.parseInt(urlParts[1]);
-
-//            String host = "5.tcp.eu.ngrok.io";
-//            int port = 14262;
 
         for (double[] data : testData) {
             executor.submit(new TCPClient(host, port, new Request(data), new ServerResponseDelegateImpl()));

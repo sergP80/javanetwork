@@ -1,5 +1,7 @@
 package ua.edu.chmnu.ki.networks.mail.imap;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import ua.edu.chmnu.ki.networks.mail.utils.MailUtils;
 
@@ -12,7 +14,7 @@ import java.util.function.Consumer;
 public class ImapReceiver implements Runnable {
 	private final static String SETTINGS = "imap.settings.properties";
 
-	private static Properties PROPERTIES;
+	private static final Properties PROPERTIES;
 
 	static {
 		PROPERTIES = new Properties();
@@ -28,18 +30,25 @@ public class ImapReceiver implements Runnable {
 		}
 	}
 
-	private final String mailBox;
+	@Getter
+    private final String mailBox;
 	private final String password;
-	private final Session session;
-	private final Store store;
+	@Getter
+    private final Session session;
+	@Getter
+    private final Store store;
 
-	private String folderName;
-	private Consumer<Message> messageConsumer;
-	private boolean active = false;
-	private String storeProtocol = "imaps";
-	private String hostProtocol = "imap";
+	@Setter
+    @Getter
+    private String folderName;
+	@Setter
+    @Getter
+    private Consumer<Message> messageConsumer;
+	@Setter
+    @Getter
+    private boolean active = false;
 
-	private void checkParams() {
+    private void checkParams() {
 		if (!MailUtils.isEmailValid(this.mailBox)) {
 			throw new IllegalArgumentException();
 		}
@@ -49,52 +58,26 @@ public class ImapReceiver implements Runnable {
 		this.password = password;
 		this.checkParams();
 		this.session = Session.getDefaultInstance(PROPERTIES, null);
-		this.store = this.session.getStore(this.storeProtocol);
+        String storeProtocol = "imaps";
+        this.store = this.session.getStore(storeProtocol);
 	}
 
-	public String getMailBox() {
-		return mailBox;
-	}
-
-	public Session getSession() {
-		return session;
-	}
-
-	public Store getStore() {
-		return store;
-	}
-
-	public String getFolderName() {
-		return folderName;
-	}
-
-	public void setFolderName(String folderName) {
-		this.folderName = folderName;
-	}
-
-	protected String getHostFromMailBox() {
+    protected String getHostFromMailBox() {
 		checkParams();
 		return this.mailBox.substring(this.mailBox.indexOf("@") + 1);
 
 	}
 
-	public Consumer<Message> getMessageConsumer() {
-		return messageConsumer;
-	}
-
-	public String getMailHost() {
+    public String getMailHost() {
 		String connectionHost = PROPERTIES.getProperty("mail.imap.host");
 		if (StringUtils.isBlank(connectionHost)) {
-			return String.join(".", hostProtocol, getHostFromMailBox());
+            String hostProtocol = "imap";
+            return String.join(".", hostProtocol, getHostFromMailBox());
 		}
 		return connectionHost;
 	}
 
-	public void setMessageConsumer(Consumer<Message> messageConsumer) {
-		this.messageConsumer = messageConsumer;
-	}
-
-	void checkFolder() throws MessagingException {
+    void checkFolder() throws MessagingException {
 		if (StringUtils.isEmpty(this.folderName) || StringUtils.isBlank(this.folderName)) {
 			throw new IllegalArgumentException("Folder cannot be empty");
 		}
@@ -114,25 +97,15 @@ public class ImapReceiver implements Runnable {
 		}
 	}
 
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	@Override
+    @Override
 	public void run() {
 		while (this.active && Thread.currentThread().isAlive()) {
 			try {
 				checkFolder();
 				Thread.sleep(5000);
-			} catch (MessagingException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
+			} catch (MessagingException | InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
+        }
 	}
 }

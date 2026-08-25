@@ -1,4 +1,4 @@
-package ua.edu.chmnu.ki.networks.chat.server;
+package ua.edu.chmnu.ki.networks.chat.server.session;
 
 import ua.edu.chmnu.ki.networks.chat.common.ChatMessage;
 

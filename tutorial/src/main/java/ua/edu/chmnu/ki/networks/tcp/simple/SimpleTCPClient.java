@@ -15,14 +15,10 @@ import java.util.logging.Logger;
 
 public class SimpleTCPClient implements Runnable {
 
-    private final String host;
-    private final int port;
     private final Object data;
     private final Socket socket;
     
     public SimpleTCPClient(String host, int port, Object data) throws IOException {
-        this.host = host;
-        this.port = port;
         this.data = data;
         this.socket = new Socket(host, port);
         this.socket.setSoTimeout(1000);
@@ -31,7 +27,7 @@ public class SimpleTCPClient implements Runnable {
     @Override
     public void run() {
         try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());) {
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
             //Thread.sleep(1000);
             out.writeObject(data);
             Object r = in.readObject();
@@ -42,11 +38,9 @@ public class SimpleTCPClient implements Runnable {
         }catch (SocketTimeoutException ex)
         {
             System.out.println("No ops on the socket: " + ex.getMessage());  
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(SimpleTCPClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SimpleTCPClient.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
     }
 
 }

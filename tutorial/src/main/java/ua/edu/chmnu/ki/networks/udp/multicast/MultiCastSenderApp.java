@@ -1,7 +1,6 @@
 package ua.edu.chmnu.ki.networks.udp.multicast;
 
 import java.io.IOException;
-import java.net.SocketException;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -12,19 +11,19 @@ import static ua.edu.chmnu.ki.networks.utils.CmdLineParser.extractValue;
 
 public class MultiCastSenderApp {
 
-    public static void main(String[] args) throws SocketException, IOException {
+    public static void main(String[] args) throws IOException {
         ExecutorService service = Executors.newCachedThreadPool();
 
         String group = "224.0.0.3";
         int port = 5559;
-        for (int i = 0; i < args.length; ++i) {
-            String value = extractValue(args[i], "-g:");
+        for (String arg : args) {
+            String value = extractValue(arg, "-g:");
             if (value != null) {
                 group = value;
                 continue;
             }
 
-            value = extractValue(args[i], "-p:");
+            value = extractValue(arg, "-p:");
             if (value != null) {
                 port = Integer.parseInt(value);
             }
@@ -32,7 +31,7 @@ public class MultiCastSenderApp {
         }
 
         MultiCastSender sender =  new MultiCastSender(group, port).setAction(() -> {
-            String toSend = String.format("Local time: %s", LocalDateTime.now().toString());
+            String toSend = String.format("Local time: %s", LocalDateTime.now());
             return toSend.getBytes();
         });
         service.submit(sender);

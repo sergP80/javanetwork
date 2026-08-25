@@ -10,7 +10,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.*;
 
 public class HtmlSmtpSender extends AbstractSmtpSender {
-    private static String DEFAULT_HTML_ROOT = "/emails";
+    private static final String DEFAULT_HTML_ROOT = "/emails";
     public HtmlSmtpSender(Session session) {
         super(session);
     }

@@ -21,7 +21,7 @@ public class UdpSender implements Runnable {
 
     private Boolean active = true;
 
-    private ArrayBlockingQueue<GamerLocation> gamerLocationQueue = new ArrayBlockingQueue<>(500);
+    private final ArrayBlockingQueue<GamerLocation> gamerLocationQueue = new ArrayBlockingQueue<>(500);
 
     public UdpSender(String host, int port) {
         try {
